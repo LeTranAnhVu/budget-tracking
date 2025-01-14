@@ -11,7 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Category> Categories { get; set; }
 
-    // public DbSet<Expense> Expenses { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -34,13 +34,13 @@ public class AppDbContext : DbContext
             .WithMany(c => c.Categories)
             .HasForeignKey(s => s.SupCategoryId)
             .OnDelete(DeleteBehavior.Restrict);
-        //
-        // modelBuilder.Entity<Expense>().HasKey(c => c.Id);
-        // modelBuilder.Entity<Expense>().Property(c => c.Note).HasMaxLength(255);
-        // modelBuilder.Entity<Expense>()
-        //     .HasOne(s => s.Category)
-        //     .WithMany()
-        //     .HasForeignKey(e => e.CategoryId)
-        //     .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Expense>().HasKey(c => c.Id);
+        modelBuilder.Entity<Expense>().Property(c => c.Note).HasMaxLength(255);
+        modelBuilder.Entity<Expense>()
+            .HasOne(s => s.Category)
+            .WithMany()
+            .HasForeignKey(e => e.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
