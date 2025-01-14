@@ -8,5 +8,5 @@ public class SupCategory: ModelBase
 
     public string MetaDescription { get; set; } = null!;
 
-    // public List<Category> Categories { get; set; } = [];
+    public List<Category> Categories { get; set; } = [];
 }

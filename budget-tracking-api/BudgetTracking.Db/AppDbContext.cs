@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<SupCategory> SupCategories { get; set; }
 
-    // public DbSet<Category> Categories { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     // public DbSet<Expense> Expenses { get; set; }
 
@@ -26,14 +26,14 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<SupCategory>().HasKey(c => c.Id);
         modelBuilder.Entity<SupCategory>().Property(c => c.Name).IsRequired().HasMaxLength(255);
         modelBuilder.Entity<SupCategory>().Property(c => c.MetaDescription).IsRequired().HasMaxLength(255);
-        //
-        // modelBuilder.Entity<Category>().HasKey(c => c.Id);
-        // modelBuilder.Entity<Category>().Property(c => c.Name).IsRequired().HasMaxLength(255);
-        // modelBuilder.Entity<Category>()
-        //     .HasOne(s => s.SupCategory)
-        //     .WithMany(c => c.Categories)
-        //     .HasForeignKey(s => s.SupCategoryId)
-        //     .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Category>().HasKey(c => c.Id);
+        modelBuilder.Entity<Category>().Property(c => c.Name).IsRequired().HasMaxLength(255);
+        modelBuilder.Entity<Category>()
+            .HasOne(s => s.SupCategory)
+            .WithMany(c => c.Categories)
+            .HasForeignKey(s => s.SupCategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
         //
         // modelBuilder.Entity<Expense>().HasKey(c => c.Id);
         // modelBuilder.Entity<Expense>().Property(c => c.Note).HasMaxLength(255);
