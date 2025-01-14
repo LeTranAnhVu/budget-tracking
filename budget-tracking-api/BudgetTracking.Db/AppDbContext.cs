@@ -7,7 +7,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
 
-    // public DbSet<SupCategory> SupCategories { get; set; }
+    public DbSet<SupCategory> SupCategories { get; set; }
 
     // public DbSet<Category> Categories { get; set; }
 
@@ -23,9 +23,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>().Property(c => c.Email).IsRequired().HasMaxLength(100);
         modelBuilder.Entity<User>().Property(c => c.Password).HasMaxLength(255);
 
-        // modelBuilder.Entity<SupCategory>().HasKey(c => c.Id);
-        // modelBuilder.Entity<SupCategory>().Property(c => c.Name).IsRequired().HasMaxLength(255);
-        // modelBuilder.Entity<SupCategory>().Property(c => c.MetaDescription).IsRequired().HasMaxLength(255);
+        modelBuilder.Entity<SupCategory>().HasKey(c => c.Id);
+        modelBuilder.Entity<SupCategory>().Property(c => c.Name).IsRequired().HasMaxLength(255);
+        modelBuilder.Entity<SupCategory>().Property(c => c.MetaDescription).IsRequired().HasMaxLength(255);
         //
         // modelBuilder.Entity<Category>().HasKey(c => c.Id);
         // modelBuilder.Entity<Category>().Property(c => c.Name).IsRequired().HasMaxLength(255);
