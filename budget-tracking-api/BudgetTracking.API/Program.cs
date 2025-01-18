@@ -1,9 +1,14 @@
+using BudgetTracking.API.Endpoints;
 using BudgetTracking.Db.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme);
+builder.Services.AddAuthorization();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddDbLayer(builder.Configuration);
@@ -18,8 +23,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 
-app.MapGet("/test", () => "API is working!")
-    .WithName("Testing api");
+var api = app.MapGroup("api");
+
+api.MapGet("test", () => "Can access!").RequireAuthorization();
+
+api.AddAuthEndpoints();
 
 app.Run();
