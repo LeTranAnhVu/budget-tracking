@@ -1,6 +1,7 @@
 using System.Text;
 using BudgetTracking.API.Endpoints;
 using BudgetTracking.API.Filters;
+using BudgetTracking.API.Middlewares;
 using BudgetTracking.API.Services;
 using BudgetTracking.Application.Configs;
 using BudgetTracking.Application.Extensions;
@@ -53,6 +54,8 @@ app.UseHttpsRedirection();
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/security?view=aspnetcore-9.0
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 var api = app.MapGroup("api")
     .RequireAuthorization()
