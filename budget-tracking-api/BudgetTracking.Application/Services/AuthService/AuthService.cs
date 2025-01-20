@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using BudgetTracking.Application.Configs;
+using BudgetTracking.Application.Exceptions;
 using BudgetTracking.Db;
 using BudgetTracking.Domain.Models;
 using JWT.Algorithms;
@@ -45,13 +46,13 @@ public class AuthService(AppDbContext context, IOptions<JwtSettings> jwtSettings
         var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email, ct);
         if (existingUser == null)
         {
-            throw new Exception("User not found");
+            throw new LoginException("User not found");
         }
 
         var hashedInputPassword = HashPassword(dto.Password, secret);
         if (existingUser.Password != hashedInputPassword)
         {
-            throw new Exception("Incorrect email or password");
+            throw new LoginException("Incorrect email or password");
         }
 
         return GenerateJwtToken(existingUser.Email);

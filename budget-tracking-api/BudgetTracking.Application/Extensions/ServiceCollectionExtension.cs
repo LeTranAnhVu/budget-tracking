@@ -1,4 +1,5 @@
 ﻿using BudgetTracking.Application.Configs;
+using BudgetTracking.Application.Repositories.User;
 using BudgetTracking.Application.Services.AuthService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ public static class ServiceCollectionExtension
    {
       services.Configure<JwtSettings>(config.GetSection(nameof(JwtSettings)));
       services.AddScoped<IAuthService, AuthService>();
+      services.AddScoped<IUserRepository, UserRepository>();
       return services;
    }
 }

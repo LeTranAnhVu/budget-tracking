@@ -1,5 +1,7 @@
 ﻿
+using BudgetTracking.API.Filters;
 using BudgetTracking.Application.Services.AuthService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BudgetTracking.API.Endpoints;
@@ -9,8 +11,12 @@ public static class AuthEndpoints
     public static RouteGroupBuilder AddAuthEndpoints(this RouteGroupBuilder route)
     {
         var group = route.MapGroup("auth");
-        group.MapPost("register", RegisterHandler);
-        group.MapPost("login", LoginHandler);
+
+        group.MapPost("register", RegisterHandler)
+            .WithMetadata(new AllowAnonymousAttribute(), new SkipUserContextFilterAttribute());
+
+        group.MapPost("login", LoginHandler)
+            .WithMetadata(new AllowAnonymousAttribute(), new SkipUserContextFilterAttribute());
 
         return group;
     }
