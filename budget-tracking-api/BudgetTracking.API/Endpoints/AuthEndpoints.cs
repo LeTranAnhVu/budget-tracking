@@ -1,4 +1,5 @@
 ﻿
+using BudgetTracking.Application.Services.AuthService;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BudgetTracking.API.Endpoints;
@@ -14,14 +15,15 @@ public static class AuthEndpoints
         return group;
     }
 
-    private static Task LoginHandler(HttpContext context, CancellationToken ct)
+    private static async Task<Ok<string>> LoginHandler(InputUserRegisterDto dto, IAuthService authService, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var result = await authService.LoginAsync(dto, ct);
+        return TypedResults.Ok(result);
     }
 
-    private static async Task<IResult> RegisterHandler(HttpContext context, CancellationToken ct)
+    private static async Task<IResult> RegisterHandler(InputUserRegisterDto dto, IAuthService authService, CancellationToken ct)
     {
-        await Task.Delay(200);
-        return TypedResults.Ok("sdkjfd");
+        await authService.RegisterNewUserAsync(dto, ct);
+        return Results.Ok();
     }
 }

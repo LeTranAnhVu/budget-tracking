@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
     {
         modelBuilder.Entity<User>().HasKey(c => c.Id);
         modelBuilder.Entity<User>().Property(c => c.Email).IsRequired().HasMaxLength(100);
+        modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
         modelBuilder.Entity<User>().Property(c => c.Password).HasMaxLength(255);
 
         modelBuilder.Entity<SupCategory>().HasKey(c => c.Id);
