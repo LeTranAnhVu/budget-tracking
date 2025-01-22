@@ -1,35 +1,42 @@
-﻿
-using BudgetTracking.API.Filters;
-using BudgetTracking.Application.Services.AuthService;
-using Microsoft.AspNetCore.Authorization;
+﻿using BudgetTracking.Application.Services.ExpenseService;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BudgetTracking.API.Endpoints;
 
-public static class AuthEndpoints
+public static class ExpenseEndpoints
 {
-    public static RouteGroupBuilder AddAuthEndpoints(this RouteGroupBuilder route)
+    public static RouteGroupBuilder AddExpenseEndpoints(this RouteGroupBuilder route)
     {
-        var group = route.MapGroup("auth");
+        var group = route.MapGroup("expenses");
 
-        group.MapPost("register", RegisterHandler)
-            .WithMetadata(new AllowAnonymousAttribute(), new SkipUserContextFilterAttribute());
-
-        group.MapPost("login", LoginHandler)
-            .WithMetadata(new AllowAnonymousAttribute(), new SkipUserContextFilterAttribute());
+        group.MapGet("", GetHandler);
+        group.MapPost("", CreateHandler);
+        group.MapPut("{id}", UpdateHandler);
+        group.MapDelete("{id}", DeleteHandler);
 
         return group;
     }
 
-    private static async Task<Ok<string>> LoginHandler(InputUserRegisterDto dto, IAuthService authService, CancellationToken ct)
+    private static async Task<Ok<List<ExpenseDto>>> GetHandler(IExpenseService expenseService, CancellationToken ct)
     {
-        var result = await authService.LoginAsync(dto, ct);
-        return TypedResults.Ok(result);
+        var expenses = await expenseService.GetAllAsync(ct);
+        return TypedResults.Ok(expenses);
+    }
+    private static async Task<Created<ExpenseDto>> CreateHandler(InputExpenseDto dto, IExpenseService expenseService, CancellationToken ct)
+    {
+        var expense = await expenseService.CreateOneAsync(dto, ct);
+        return TypedResults.Created($"api/expenses/{expense.Id}", expense);
     }
 
-    private static async Task<IResult> RegisterHandler(InputUserRegisterDto dto, IAuthService authService, CancellationToken ct)
+    private static async Task<Ok<ExpenseDto>> UpdateHandler(int id , InputExpenseDto dto, IExpenseService expenseService, CancellationToken ct)
     {
-        await authService.RegisterNewUserAsync(dto, ct);
-        return Results.Ok();
+        var expense = await expenseService.UpdateOneAsync(id, dto, ct);
+        return TypedResults.Ok(expense);
+    }
+
+    private static async Task<Ok> DeleteHandler(int id , IExpenseService expenseService, CancellationToken ct)
+    {
+        await expenseService.DeleteOneAsync(id, ct);
+        return TypedResults.Ok();
     }
 }

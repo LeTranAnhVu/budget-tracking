@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BudgetTracking.Application;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class ServiceCollectionExtension
          builder.UseNpgsql(db);
       });
 
+      services.AddScoped<IAppDbContext, AppDbContext>();
       return services;
    }
 }

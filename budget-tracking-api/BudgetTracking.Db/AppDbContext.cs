@@ -1,10 +1,16 @@
-﻿using BudgetTracking.Domain.Models;
+﻿using BudgetTracking.Application;
+using BudgetTracking.Application.Services;
+using BudgetTracking.Domain.Models;
+using BudgetTracking.Domain.Models.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BudgetTracking.Db;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IAppDbContext
 {
+    private readonly IUserContext _userContext;
+
     public DbSet<User> Users { get; set; }
 
     public DbSet<SupCategory> SupCategories { get; set; }
@@ -13,8 +19,9 @@ public class AppDbContext : DbContext
 
     public DbSet<Expense> Expenses { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IUserContext userContext) : base(options)
     {
+        _userContext = userContext;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,8 +47,27 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Expense>().Property(c => c.Note).HasMaxLength(255);
         modelBuilder.Entity<Expense>()
             .HasOne(s => s.Category)
-            .WithMany()
+            .WithMany(c => c.Expenses)
             .HasForeignKey(e => e.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        var trackedEntries = ChangeTracker.Entries<ITrackable>();
+        foreach (var entry in trackedEntries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedBy = _userContext.Id;
+                entry.Entity.CreatedAt = DateTime.UtcNow;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedBy = _userContext.Id;
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

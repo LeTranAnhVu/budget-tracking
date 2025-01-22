@@ -2,13 +2,13 @@
 
 public record InputExpenseDto
 {
-    public double Amount { get; init; }
+    public required double Amount { get; init; }
 
     public string? Note { get; init; }
 
     public double? Vat { get; init; }
 
-    public bool IncludedTax { get; init; }
+    public required bool IncludedTax { get; init; }
 
-    public int CategoryId { get; init; }
+    public required int CategoryId { get; init; }
 }

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using BudgetTracking.API.Endpoints;
 using BudgetTracking.API.Filters;
 using BudgetTracking.API.Middlewares;
@@ -8,6 +9,7 @@ using BudgetTracking.Application.Extensions;
 using BudgetTracking.Application.Services;
 using BudgetTracking.Db.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
@@ -40,6 +42,11 @@ builder.Services
     .AddDbLayer(builder.Configuration)
     .AddAppLayer(builder.Configuration);
 
+builder.Services.Configure<JsonOptions>(opt =>
+{
+    opt.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -68,5 +75,7 @@ api.MapGet("test", (IUserContext userContext) =>
 });
 
 api.AddAuthEndpoints();
+api.AddExpenseEndpoints();
+api.AddCategoryEndpoints();
 
 app.Run();

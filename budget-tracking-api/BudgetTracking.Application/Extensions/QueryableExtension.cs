@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using BudgetTracking.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace BudgetTracking.Application.Extensions;
 
@@ -11,7 +12,7 @@ public static class QueryableExtension
         var entity = await dbSet.FirstOrDefaultAsync(predicate, ct);
         if (entity is null)
         {
-            throw new EntityNotFoundException(typeof(T).ToString());
+            throw new EntityNotFoundException(typeof(T).ShortDisplayName());
         }
 
         return entity;

@@ -2,7 +2,6 @@
 using System.Text;
 using BudgetTracking.Application.Configs;
 using BudgetTracking.Application.Exceptions;
-using BudgetTracking.Db;
 using BudgetTracking.Domain.Models;
 using JWT.Algorithms;
 using JWT.Builder;
@@ -17,7 +16,7 @@ public interface IAuthService
     public Task<string> LoginAsync(InputUserRegisterDto dto, CancellationToken ct);
 }
 
-public class AuthService(AppDbContext context, IOptions<JwtSettings> jwtSettings) : IAuthService
+public class AuthService(IAppDbContext context, IOptions<JwtSettings> jwtSettings) : IAuthService
 {
     public async Task RegisterNewUserAsync(InputUserRegisterDto dto, CancellationToken ct)
     {

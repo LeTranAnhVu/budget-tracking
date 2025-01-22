@@ -2,8 +2,10 @@
 
 namespace BudgetTracking.Application.Services.ExpenseService;
 
-public class ExpenseDto
+public record ExpenseDto
 {
+    public int Id { get; set; }
+
     public double Amount { get; set; }
 
     public string? Note { get; set; }
@@ -13,8 +15,6 @@ public class ExpenseDto
     public bool IncludedTax { get; set; }
 
     public int CategoryId { get; set; }
-
-    public Category Category { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
