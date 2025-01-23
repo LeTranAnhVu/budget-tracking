@@ -3,7 +3,7 @@
 
 <template>
   <div>
-    <router-view />
+    <h1>Login</h1>
   </div>
 </template>
 
