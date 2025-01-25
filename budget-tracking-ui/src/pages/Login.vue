@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import Button from '../components/Button.vue'
 import TextInput from '../components/TextInput.vue'
+import LoginIllustration from '/login-illustration.svg'
 
 const form = reactive({
   email: '',
@@ -18,7 +19,13 @@ function handleLogin(): void {
     <h1 class="text-2xl font-bold text-center">
       Login
     </h1>
-    <div class="flex flex-col items-center mt-10">
+    <div class="flex flex-col items-center mt-10 max-w-md mx-auto">
+      <img
+        :src="LoginIllustration"
+        alt="Login illustration"
+        class="w-64 mb-8"
+      >
+
       <TextInput
         v-model="form.email"
         placeholder="Email"
@@ -32,7 +39,7 @@ function handleLogin(): void {
       />
 
       <Button
-        class="mt-4"
+        class="mt-6"
         @click="handleLogin"
       >
         Log in
