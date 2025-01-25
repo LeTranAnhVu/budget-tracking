@@ -1,10 +1,9 @@
+import AddExpense from '@/pages/AddExpense.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-
 import Login from '../pages/Login.vue'
-import Page1 from '../pages/Page1.vue'
 
 const routes = [
-  { path: '/', component: Page1 },
+  { path: '/', component: AddExpense },
   { path: '/login', component: Login },
 ]
 

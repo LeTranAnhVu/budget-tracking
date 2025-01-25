@@ -7,6 +7,9 @@ export default antfu(
     typescript: true,
     css: true,
     html: true,
+    rules: {
+      'perfectionist/sort-imports': ['warn'],
+    },
   },
   {
     files: ['**/*.ts', '**/*.vue'],
