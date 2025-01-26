@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type CategoryDto from '@/models/CategoryDto'
 import Button from '@/components/Button.vue'
 import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import date2Str from '@/helpers/date2Str'
-import type CategoryDto from '@/models/CategoryDto'
 import { reactive } from 'vue'
 
 const ingredients = [
@@ -45,8 +45,6 @@ const form = reactive({
 function save(): void {
   console.error('save', form)
 }
-
-
 </script>
 
 <template>
@@ -63,11 +61,16 @@ function save(): void {
     </div>
 
     <div>
-      <ExpenseForm v-model="form" :categories="categories" />
+      <ExpenseForm
+        v-model="form"
+        :categories="categories"
+      />
     </div>
 
     <div class="mt-10">
-      <Button @click="save">Save</Button>
+      <Button @click="save">
+        Save
+      </Button>
     </div>
   </div>
 </template>

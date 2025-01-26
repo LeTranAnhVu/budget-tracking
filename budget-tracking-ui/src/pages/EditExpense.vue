@@ -44,8 +44,6 @@ const form = reactive({
 function save(): void {
   console.error('save', form)
 }
-
-
 </script>
 
 <template>
@@ -62,12 +60,22 @@ function save(): void {
     </div>
 
     <div>
-      <ExpenseForm v-model="form" :categories="categories" />
+      <ExpenseForm
+        v-model="form"
+        :categories="categories"
+      />
     </div>
 
     <div class="mt-10 flex flex-col gap-4">
-      <Button @click="save">Save</Button>
-      <Button @click="save" color="danger">Delete</Button>
+      <Button @click="save">
+        Save
+      </Button>
+      <Button
+        color="danger"
+        @click="save"
+      >
+        Delete
+      </Button>
     </div>
   </div>
 </template>

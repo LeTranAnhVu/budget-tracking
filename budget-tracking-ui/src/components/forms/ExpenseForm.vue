@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type CategoryDto from '@/models/CategoryDto'
 import Badge from '@/components/Badge.vue'
 import Collapse from '@/components/Collapse.vue'
 import DateInput from '@/components/DateInput.vue'
@@ -8,11 +9,10 @@ import NumericInput from '@/components/NumericInput.vue'
 import SingleSelector, { type SingleSelectorItem } from '@/components/SingleSelector/SingleSelector.vue'
 import TextArea from '@/components/TextArea.vue'
 import { CURRENCY } from '@/constants'
-import type CategoryDto from '@/models/CategoryDto'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  categories : Record<string, CategoryDto[]>
+  categories: Record<string, CategoryDto[]>
 }>()
 
 const form = defineModel<{
@@ -20,13 +20,12 @@ const form = defineModel<{
   date: string
   notes: string
   categoryId: number
-}>({required: true})
-
+}>({ required: true })
 
 const mappedCategories = computed<Record<string, SingleSelectorItem[]>>(() => {
-  let result:Record<string, SingleSelectorItem[]> = {}
+  const result: Record<string, SingleSelectorItem[]> = {}
   for (const [key, childrenCategories] of Object.entries(props.categories)) {
-    result[key] = childrenCategories.map(c => ({name: c.name, value: c.id} as SingleSelectorItem))
+    result[key] = childrenCategories.map(c => ({ name: c.name, value: c.id } as SingleSelectorItem))
   }
 
   return result
