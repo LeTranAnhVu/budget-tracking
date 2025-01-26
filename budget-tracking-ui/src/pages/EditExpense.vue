@@ -2,7 +2,6 @@
 import Button from '@/components/Button.vue'
 import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import date2Str from '@/helpers/date2Str'
-import type CategoryDto from '@/models/CategoryDto'
 import { reactive } from 'vue'
 
 const ingredients = [
@@ -29,7 +28,7 @@ const maintaince = [
   { id: 12, name: 'servicing' },
 ]
 
-const categories: Record<string, CategoryDto[]> = {
+const categories = {
   ingredients,
   packaging,
   fuel,
@@ -53,7 +52,7 @@ function save(): void {
   <div class="pt-4">
     <div class="relative">
       <h1 class="text-2xl font-bold text-center">
-        Add Expense
+        Edit Expense
       </h1>
       <!-- <div class="absolute top-1 right-1">
         <TextButton @click="save">
@@ -66,8 +65,9 @@ function save(): void {
       <ExpenseForm v-model="form" :categories="categories" />
     </div>
 
-    <div class="mt-10">
+    <div class="mt-10 flex flex-col gap-4">
       <Button @click="save">Save</Button>
+      <Button @click="save" color="danger">Delete</Button>
     </div>
   </div>
 </template>

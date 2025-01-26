@@ -3,11 +3,11 @@ defineProps<{
   label: string
   symbol?: string
 }>()
-const value = defineModel<Date>()
+const value = defineModel<string>()
 </script>
 
 <template>
-  <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+  <div class="flex max-w-[480px] flex-wrap items-end gap-4 py-3">
     <label class="flex flex-col min-w-40 flex-1">
       <p class="text-[#111318] text-base font-medium leading-normal pb-2">{{ label }}</p>
       <div class="flex w-full flex-1 items-stretch rounded-xl relative">

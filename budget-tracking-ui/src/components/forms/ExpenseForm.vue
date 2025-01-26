@@ -5,52 +5,36 @@ import DateInput from '@/components/DateInput.vue'
 import DateIcon from '@/components/icons/DateIcon.vue'
 import MoneyIcon from '@/components/icons/MoneyIcon.vue'
 import NumericInput from '@/components/NumericInput.vue'
+import SingleSelector, { type SingleSelectorItem } from '@/components/SingleSelector/SingleSelector.vue'
 import TextArea from '@/components/TextArea.vue'
 import { CURRENCY } from '@/constants'
-import { computed, reactive } from 'vue'
-import SingleSelector from './SingleSelector/SingleSelector.vue'
+import type CategoryDto from '@/models/CategoryDto'
+import { computed } from 'vue'
 
-const ingredients = [
-  { value: 1, name: 'milk' },
-  { value: 2, name: 'diesel' },
-  { value: 3, name: 'sugar' },
-  { value: 4, name: 'toppings' },
-]
+const props = defineProps<{
+  categories : Record<string, CategoryDto[]>
+}>()
 
-const packaging = [
-  { value: 5, name: 'cups' },
-  { value: 6, name: 'cones' },
-  { value: 7, name: 'napkins' },
-  { value: 8, name: 'spoons' },
-]
+const form = defineModel<{
+  amount: number
+  date: string
+  notes: string
+  categoryId: number
+}>({required: true})
 
-const fuel = [
-  { value: 9, name: 'gasoline' },
-  { value: 10, name: 'diesel' },
-]
 
-const maintaince = [
-  { value: 11, name: 'repairs' },
-  { value: 12, name: 'servicing' },
-]
+const mappedCategories = computed<Record<string, SingleSelectorItem[]>>(() => {
+  let result:Record<string, SingleSelectorItem[]> = {}
+  for (const [key, childrenCategories] of Object.entries(props.categories)) {
+    result[key] = childrenCategories.map(c => ({name: c.name, value: c.id} as SingleSelectorItem))
+  }
 
-const categories = {
-  ingredients,
-  packaging,
-  fuel,
-  maintaince,
-}
-
-const form = reactive({
-  amount: 0,
-  date: Date,
-  notes: '',
-  categoryId: 1,
+  return result
 })
 
-const selectedCategory = computed<{ value: number, name: string } | null>(() => {
-  const items = Object.values(categories).flat()
-  return items.find(item => form.categoryId === item.value) || null
+const selectedCategory = computed<CategoryDto | null>(() => {
+  const items = Object.values(props.categories).flat()
+  return items.find(item => form.value.categoryId === item.id) || null
 })
 </script>
 
@@ -77,10 +61,10 @@ const selectedCategory = computed<{ value: number, name: string } | null>(() => 
           title="Categories"
           :initial-open="true"
         >
-          <div class="px-2">
-            <div class="bg-[#f0f2f4] rounded-xl">
+          <div class="px-3 bg-[#f0f2f4] rounded-xl">
+            <div class="">
               <template
-                v-for="(childCategories, key) in categories"
+                v-for="(childCategories, key) in mappedCategories"
                 :key="key"
               >
                 <Collapse :title="key">

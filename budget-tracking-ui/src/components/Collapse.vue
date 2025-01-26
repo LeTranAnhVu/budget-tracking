@@ -39,7 +39,7 @@ function leave(el: Element): void {
   <div class="">
     <div class="overflow-hidden">
       <button
-        class="flex justify-between items-center w-full p-4 text-left text-gray-700 font-medium focus:outline-none hover:bg-gray-100 transition"
+        class="flex justify-between items-center w-full py-4 text-left text-gray-700 font-medium focus:outline-none hover:bg-gray-100 transition"
         @click="toggle"
       >
         <span>{{ title }}</span>
