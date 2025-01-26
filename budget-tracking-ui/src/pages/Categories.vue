@@ -2,7 +2,7 @@
 import Divider from '@/components/Divider.vue'
 import SlimItem from '@/components/SlimItem.vue'
 import { CURRENCY } from '@/constants'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const ingredients = [
   { id: 1, amount: 10.5, name: 'milk' },
@@ -50,6 +50,7 @@ const calcCategories = computed(() => {
       title: key,
       noOfTrxs: catLen,
       amount,
+      transactions: childrenCategories,
     })
   }
 
@@ -58,6 +59,7 @@ const calcCategories = computed(() => {
     title: 'Total',
     noOfTrxs: totalNoTrxs,
     amount: totalAmount,
+    transactions: [],
   })
 
   return result
@@ -66,6 +68,20 @@ const calcCategories = computed(() => {
 function toNoOfTrxText(noOfTrx: number): string {
   const suffix = noOfTrx === 1 ? 'transaction' : 'transactions'
   return `${noOfTrx === 0 ? 'No' : noOfTrx} ${suffix}`
+}
+
+function toCurrency(amount: number, withSymbol: boolean = true): string {
+  const prefix = withSymbol ? `${CURRENCY} ` : ''
+  return `${prefix}${amount.toFixed(2)}`
+}
+
+const openedCategoryIndex = ref<string | null>(null)
+function handleClick(id: string): void {
+  if (openedCategoryIndex.value === id) {
+    openedCategoryIndex.value = null
+  } else {
+    openedCategoryIndex.value = id
+  }
 }
 </script>
 
@@ -93,58 +109,33 @@ function toNoOfTrxText(noOfTrx: number): string {
           </div>
         </div>
         <div class="mt-2">
-          <SlimItem
+          <div
             v-for="(item, index) in calcCategories.slice(0, -1)"
             :key="index"
-            :title="item.title"
-            :description="toNoOfTrxText(item.noOfTrxs)"
-            :side-text="`${CURRENCY} ${item.amount.toFixed(2)}`"
-          />
-        </div>
-      </div>
+          >
+            <SlimItem
+              :title="item.title"
+              :description="toNoOfTrxText(item.noOfTrxs)"
+              :side-text="toCurrency(item.amount)"
+              @click="handleClick(`this_week_${item.title}`)"
+            />
 
-      <div>
-        <div class="flex justify-between">
-          <div>
-            <h2 class="text-xl font-bold flex items-center">
-              This month
-            </h2>
-            <span class="font-normal text-xs text-[#636e88]">({{ toNoOfTrxText(calcCategories[calcCategories.length - 1]?.noOfTrxs) }})</span>
+            <div
+              v-if="openedCategoryIndex === `this_week_${item.title}`"
+              class="pl-2 text-[#636e88] flex flex-col gap-3 mb-5"
+            >
+              <div
+                v-for="(trx, trxInd) in item.transactions"
+                :key="trxInd"
+                class="flex flex-nowrap items-center justify-between"
+              >
+                <span>{{ trx.name }}</span><span>{{ toCurrency(trx.amount, false) }}</span>
+              </div>
+            </div>
           </div>
-
-          <div>
-            <p class="text-lg font-medium">
-              {{ `${CURRENCY} ${calcCategories[calcCategories.length - 1]?.amount.toFixed(2)}` }}
-            </p>
-          </div>
-        </div>
-        <div class="mt-2">
-          <SlimItem
-            v-for="(item, index) in calcCategories.slice(0, -1)"
-            :key="index"
-            :title="item.title"
-            :description="toNoOfTrxText(item.noOfTrxs)"
-            :side-text="`${CURRENCY} ${item.amount.toFixed(2)}`"
-          />
         </div>
       </div>
     </div>
-
-    <!-- <div class="flex items-center gap-4 bg-white min-h-14 justify-between">
-      <p class="text-[#111318] text-base font-normal leading-normal flex-1 truncate">
-        Add a new category
-      </p>
-      <div class="shrink-0">
-        <div
-          class="text-[#111318] flex size-7 items-center justify-center"
-          data-icon="Plus"
-          data-size="24px"
-          data-weight="regular"
-        >
-          <PlusIcon />
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
