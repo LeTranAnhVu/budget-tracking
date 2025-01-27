@@ -2,6 +2,7 @@
 import Divider from '@/components/Divider.vue'
 import SlimItem from '@/components/SlimItem.vue'
 import { CURRENCY } from '@/constants'
+import toCurrency from '@/helpers/toCurrency'
 import { computed, ref } from 'vue'
 
 const ingredients = [
@@ -68,11 +69,6 @@ const calcCategories = computed(() => {
 function toNoOfTrxText(noOfTrx: number): string {
   const suffix = noOfTrx === 1 ? 'transaction' : 'transactions'
   return `${noOfTrx === 0 ? 'No' : noOfTrx} ${suffix}`
-}
-
-function toCurrency(amount: number, withSymbol: boolean = true): string {
-  const prefix = withSymbol ? `${CURRENCY} ` : ''
-  return `${prefix}${amount.toFixed(2)}`
 }
 
 const openedCategoryIndex = ref<string | null>(null)

@@ -2,12 +2,14 @@ import AddExpense from '@/pages/AddExpense.vue'
 import Categories from '@/pages/Categories.vue'
 import EditExpense from '@/pages/EditExpense.vue'
 import Login from '@/pages/Login.vue'
+import Statistic from '@/pages/Statistic.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   { path: '/', component: AddExpense },
   { path: '/edit-expense/:id', component: EditExpense },
   { path: '/categories', component: Categories },
+  { path: '/statistic', component: Statistic },
   { path: '/login', component: Login },
 ]
 
