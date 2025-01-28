@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DaySpending from '@/components/Statistics/DaySpending.vue'
-import TotalSpending from '@/components/Statistics/TotalSpending.vue'
 import MonthlySpending from '@/components/Statistics/MonthlySpending.vue'
+import TotalSpending from '@/components/Statistics/TotalSpending.vue'
 </script>
 
 <template>

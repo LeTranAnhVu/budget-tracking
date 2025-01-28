@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Divider from '@/components/Divider.vue'
 import SlimItem from '@/components/SlimItem.vue'
 import { CURRENCY } from '@/constants'
 import toCurrency from '@/helpers/toCurrency'

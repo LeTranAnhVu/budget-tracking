@@ -84,7 +84,6 @@ function buildGradientBg(top: string, bottom: string): CanvasGradient | undefine
   }
 
   const canvas = (wrapperRef.value! as HTMLDivElement)?.querySelector<HTMLCanvasElement>('canvas')
-  console.log(canvas)
   if (!canvas) {
     return
   }
