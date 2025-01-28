@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import type { ChartData } from 'chart.js'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { Line } from 'vue-chartjs'
+import { GREEN, RED } from './constant'
 
 const props = defineProps<{
   x: string[]
   y: number[]
   label: string
+  color: 'green' | 'red'
 }>()
 
-const lineColor = '#ffa2a2'
+const gradientBottom = 'white'
+
+const lineColor = computed(() => props.color === 'green' ? GREEN : RED)
 
 const gradient = ref<CanvasGradient | null>(null)
 const wrapperRef = ref<HTMLDivElement | null>(null)
@@ -22,7 +26,7 @@ const chartData = computed<ChartData<'line'>>(() => {
         label: props.label,
         data: props.y,
         backgroundColor: gradient.value,
-        borderColor: lineColor, // Line color
+        borderColor: lineColor.value, // Line color
         fill: true, // Enable gradient fill
         tension: 0.4, // Smooth curve
         borderWidth: 1.5, // Thin and elegant line
@@ -67,7 +71,11 @@ const chartOptions = ref({
 
 // Create gradient background
 onMounted(() => {
-  gradient.value = buildGradientBg('#ffa2a2', 'white') || null
+  gradient.value = buildGradientBg(lineColor.value, gradientBottom) || null
+})
+
+watch(lineColor, () => {
+  gradient.value = buildGradientBg(lineColor.value, gradientBottom) || null
 })
 
 function buildGradientBg(top: string, bottom: string): CanvasGradient | undefined {
@@ -76,6 +84,7 @@ function buildGradientBg(top: string, bottom: string): CanvasGradient | undefine
   }
 
   const canvas = (wrapperRef.value! as HTMLDivElement)?.querySelector<HTMLCanvasElement>('canvas')
+  console.log(canvas)
   if (!canvas) {
     return
   }

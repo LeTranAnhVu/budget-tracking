@@ -1,10 +1,5 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-
-import { router } from './routes'
-import './index.css'
-
 import {
+  BarElement,
   CategoryScale,
   Chart as ChartJS,
   Filler,
@@ -14,9 +9,17 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
+import { createApp } from 'vue'
+
+import App from './App.vue'
+import { router } from './routes'
+
+import './index.css'
+
 ChartJS.register(
   Title,
   Tooltip,
+  BarElement,
   LineElement,
   LinearScale,
   PointElement,
