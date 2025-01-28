@@ -11,21 +11,23 @@ import TotalSpending from '@/components/Statistics/TotalSpending.vue'
         Statistic
       </h1>
     </div>
-    <div class="mt-6">
-      <TotalSpending />
-    </div>
+    <div class="flex flex-col gap-20 mt-5">
+      <div>
+        <TotalSpending />
+      </div>
 
-    <div class="mt-6">
-      <MonthlySpending />
-    </div>
+      <div>
+        <MonthlySpending />
+      </div>
 
-    <div class="mt-6">
-      <h2 class="font-bold text-gray-800 mb-5">
-        By Category
-      </h2>
-      <div class="flex flex-col gap-15">
-        <DaySpending :days="5" />
-        <DaySpending :days="30" />
+      <div>
+        <h2 class="font-bold text-gray-800 mb-5">
+          By Category
+        </h2>
+        <div class="flex flex-col gap-15">
+          <DaySpending :days="5" />
+          <DaySpending :days="30" />
+        </div>
       </div>
     </div>
   </div>
