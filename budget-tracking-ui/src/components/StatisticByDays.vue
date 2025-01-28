@@ -4,7 +4,7 @@ import toCurrency from '@/helpers/toCurrency'
 import { computed, onMounted, ref } from 'vue'
 
 defineProps<{
-    days: number
+  days: number
 }>()
 
 const initialValue = 0
@@ -57,34 +57,32 @@ onMounted(() => {
 <template>
   <div>
     <p class="font-bold text-gray-700 text-3xl mb-3">
-        {{ toCurrency(totalAmount) }}
-      </p>
-      <p class="font-sm font-medium text-gray-400 text-sm">
-        Last {{ days }} days
-        <span
-        :class="changedPercent < 0 ? 'text-green-600' : changedPercent > 0 ? 'text-red-600' : '' "
-        >{{ presentNumberWithIndicator(changedPercent) }}%</span>
-      </p>
-      <div class="flex flex-col gap-4 mt-5">
-        <div
-          v-for="(item, index) in data"
-          :key="index"
-        >
-          <div class="grid grid-cols-[25%_75%] font-bold text-gray-500">
-            <p class="text-sm">
-              {{ item.name }}
-            </p>
-            <div>
-              <XBar
-                :process="calcRatio(item.value)"
-                :delay="random100()"
-                :is-show-info="loadedData"
-                :info="item.value.toFixed(2)"
-              />
-            </div>
+      {{ toCurrency(totalAmount) }}
+    </p>
+    <p class="font-sm font-medium text-gray-400 text-sm">
+      Last {{ days }} days
+      <span :class="changedPercent < 0 ? 'text-green-600' : changedPercent > 0 ? 'text-red-600' : '' ">{{ presentNumberWithIndicator(changedPercent) }}%</span>
+    </p>
+    <div class="flex flex-col gap-4 mt-5">
+      <div
+        v-for="(item, index) in data"
+        :key="index"
+      >
+        <div class="grid grid-cols-[25%_75%] font-bold text-gray-500">
+          <p class="text-sm">
+            {{ item.name }}
+          </p>
+          <div>
+            <XBar
+              :process="calcRatio(item.value)"
+              :delay="random100()"
+              :is-show-info="loadedData"
+              :info="item.value.toFixed(2)"
+            />
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
