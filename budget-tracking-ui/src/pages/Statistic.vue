@@ -25,7 +25,7 @@ import TotalSpending from '@/components/Statistics/TotalSpending.vue'
           By Category
         </h2>
         <div class="flex flex-col gap-15">
-          <DaySpending :days="5" />
+          <DaySpending :days="7" />
           <DaySpending :days="30" />
         </div>
       </div>
