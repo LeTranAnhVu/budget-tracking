@@ -43,7 +43,7 @@ function leave(el: Element): void {
         @click="toggle"
       >
         <span>{{ title }}</span>
-        <CaretDownIcon :is-open="isOpen" />
+        <CaretDownIcon :is-rotated="isOpen" />
       </button>
       <transition
         name="collapse"

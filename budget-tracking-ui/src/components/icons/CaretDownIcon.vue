@@ -1,12 +1,12 @@
 <script setup lang="ts">
 defineProps<{
-  isOpen: boolean
+  isRotated: boolean
 }>()
 </script>
 
 <template>
   <svg
-    :class="{ 'rotate-180': isOpen }"
+    :class="{ 'rotate-180': isRotated }"
     xmlns="http://www.w3.org/2000/svg"
     class="h-5 w-5 transition-transform duration-300"
     fill="none"

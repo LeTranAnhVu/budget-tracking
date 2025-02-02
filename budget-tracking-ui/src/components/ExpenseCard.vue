@@ -37,7 +37,7 @@ const isExpanded = ref(false)
         <div class="flex items-center gap-2">
           <span class="font-bold text-gray-800">${{ amount.toFixed(2) }}</span>
           <CaretDownIcon
-            :is-open="isExpanded"
+            :is-rotated="isExpanded"
             class="h-5 w-5 text-gray-400"
           />
         </div>
