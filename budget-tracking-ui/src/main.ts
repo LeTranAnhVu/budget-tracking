@@ -26,6 +26,18 @@ ChartJS.register(
   CategoryScale,
   Filler,
 )
+
+// const updateSW = registerSW({
+//   onNeedRefresh() {
+//     if (confirm('New version available! Refresh?')) {
+//       updateSW(true)
+//     }
+//   },
+//   onOfflineReady() {
+//     console.log('App is ready to work offline.')
+//   },
+// })
+
 const app = createApp(App)
 
 app
