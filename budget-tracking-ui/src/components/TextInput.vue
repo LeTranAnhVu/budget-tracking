@@ -4,7 +4,7 @@ defineProps<{
   isPassword?: boolean
 }>()
 
-const value = defineModel<string>({ required: true })
+const value = defineModel<string | undefined>({ required: true })
 </script>
 
 <template>

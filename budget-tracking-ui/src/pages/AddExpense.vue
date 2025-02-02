@@ -3,7 +3,7 @@ import type CategoryDto from '@/models/CategoryDto'
 import Button from '@/components/Button.vue'
 import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import date2Str from '@/helpers/date2Str'
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 
 const ingredients = [
   { id: 1, name: 'milk' },
@@ -29,11 +29,23 @@ const maintaince = [
   { id: 12, name: 'servicing' },
 ]
 
-const categories: Record<string, CategoryDto[]> = {
-  ingredients,
-  packaging,
-  fuel,
-  maintaince,
+const categories: Record<string, { id: number, categories: CategoryDto[] }> = {
+  ingredients: {
+    id: 1,
+    categories: ingredients,
+  },
+  packaging: {
+    id: 2,
+    categories: packaging,
+  },
+  fuel: {
+    id: 3,
+    categories: fuel,
+  },
+  maintaince: {
+    id: 4,
+    categories: maintaince,
+  },
 }
 
 const form = reactive({
@@ -42,6 +54,11 @@ const form = reactive({
   notes: '',
   categoryId: 2,
 })
+
+function createNewCategory(value: string, supCategoryId: number): void {
+  console.log('new category', value, supCategoryId)
+}
+
 function save(): void {
   console.error('save', form)
 }
@@ -62,8 +79,9 @@ function save(): void {
 
     <div>
       <ExpenseForm
-        v-model="form"
+        v-model:expense-form="form"
         :categories="categories"
+        @new-category-save="createNewCategory"
       />
     </div>
 
