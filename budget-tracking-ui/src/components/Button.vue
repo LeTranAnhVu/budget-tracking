@@ -10,12 +10,12 @@ const props = withDefaults(defineProps<{
 const computedColor = computed<string>(() => {
   switch (props.color) {
     case 'primary':
-      return 'bg-[#3b72e8]'
+      return 'bg-gray-800'
     case 'danger':
       return 'bg-red-500'
 
     default:
-      return 'bg-[#3b72e8]'
+      return 'bg-gray-800'
   }
 })
 </script>

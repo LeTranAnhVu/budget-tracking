@@ -5,12 +5,7 @@ import TotalSpending from '@/components/Statistics/TotalSpending.vue'
 </script>
 
 <template>
-  <div class="pt-4">
-    <div class="relative">
-      <h1 class="text-2xl font-bold text-center text-gray-700">
-        Statistic
-      </h1>
-    </div>
+  <div>
     <div class="flex flex-col gap-20 mt-5">
       <div>
         <TotalSpending />

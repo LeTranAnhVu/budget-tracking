@@ -81,13 +81,8 @@ function handleClick(id: string): void {
 </script>
 
 <template>
-  <div class="pt-4">
-    <div class="relative">
-      <h1 class="text-2xl font-bold text-center">
-        Categories
-      </h1>
-    </div>
-    <div class="mt-10 flex flex-col gap-8">
+  <div>
+    <div class="flex flex-col gap-8">
       <div>
         <div class="flex justify-between">
           <div>

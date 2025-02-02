@@ -15,10 +15,13 @@ function handleLogin(): void {
 </script>
 
 <template>
-  <div class="pt-4">
-    <h1 class="text-2xl font-bold text-center">
-      Login
+  <div class="pt-30 text-gray-800">
+    <h1 class="text-3xl font-bold text-center">
+      Welcome back
     </h1>
+    <p class="text-center text-gray-600 mt-2">
+      Login to access you account
+    </p>
     <div class="flex flex-col items-center mt-10 max-w-md mx-auto">
       <img
         :src="LoginIllustration"
@@ -33,13 +36,13 @@ function handleLogin(): void {
 
       <TextInput
         v-model="form.password"
-        class="mt-4"
+        class="mt-6"
         placeholder="Password"
         is-password
       />
 
       <Button
-        class="mt-6"
+        class="mt-7"
         @click="handleLogin"
       >
         Log in

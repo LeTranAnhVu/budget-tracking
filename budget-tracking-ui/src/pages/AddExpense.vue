@@ -65,18 +65,7 @@ function save(): void {
 </script>
 
 <template>
-  <div class="pt-4">
-    <div class="relative">
-      <h1 class="text-2xl font-bold text-center">
-        Add Expense
-      </h1>
-      <!-- <div class="absolute top-1 right-1">
-        <TextButton @click="save">
-          Save
-        </TextButton>
-      </div> -->
-    </div>
-
+  <div>
     <div>
       <ExpenseForm
         v-model:expense-form="form"
