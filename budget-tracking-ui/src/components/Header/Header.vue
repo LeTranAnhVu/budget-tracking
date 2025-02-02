@@ -16,6 +16,13 @@ const drawerRef = ref<HTMLDivElement | null>(null)
 // Update navigation items to use route names and meta titles
 const navItems = [
   {
+    name: routeNames.expenses,
+    displayName: 'Expenses',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 17h6m-6-4h6m-6-4h6M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>`,
+  },
+  {
     name: routeNames.addExpense,
     displayName: 'Add Expense',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

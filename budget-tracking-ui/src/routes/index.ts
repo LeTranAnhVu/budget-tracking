@@ -1,11 +1,13 @@
 import AddExpense from '@/pages/AddExpense.vue'
 import Categories from '@/pages/Categories.vue'
 import EditExpense from '@/pages/EditExpense.vue'
+import Expenses from '@/pages/Expenses.vue'
 import Login from '@/pages/Login.vue'
 import Statistic from '@/pages/Statistic.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 export const routeNames = {
+  expenses: 'expenses',
   addExpense: 'addExpense',
   editExpense: 'editExpense',
   categories: 'categories',
@@ -14,7 +16,8 @@ export const routeNames = {
 }
 
 const routes = [
-  { path: '/', component: AddExpense, name: routeNames.addExpense, meta: { title: 'Add Expense' } },
+  { path: '/', component: Expenses, name: routeNames.expenses, meta: { title: 'Expenses' } },
+  { path: '/add-expense', component: AddExpense, name: routeNames.addExpense, meta: { title: 'Add Expense' } },
   { path: '/edit-expense/:id', component: EditExpense, name: routeNames.editExpense, meta: { title: 'Edit Expense' } },
   { path: '/categories', component: Categories, name: routeNames.categories, meta: { title: 'Categories' } },
   { path: '/statistic', component: Statistic, name: routeNames.statistic, meta: { title: 'Statistic' } },
