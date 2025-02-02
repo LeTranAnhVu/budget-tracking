@@ -11,9 +11,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png'],
-      // registerType: 'autoUpdate',
-      // srcDir: 'src',
-      // filename: 'service-worker.ts',
+      registerType: 'autoUpdate',
       // workbox: {
       //   cleanupOutdatedCaches: true,
       //   globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
