@@ -12,7 +12,7 @@ const computedColor = computed<string>(() => {
     case 'primary':
       return 'bg-gray-800'
     case 'danger':
-      return 'bg-red-500'
+      return 'bg-red-400'
 
     default:
       return 'bg-gray-800'
@@ -22,7 +22,7 @@ const computedColor = computed<string>(() => {
 
 <template>
   <button
-    class="cursor-pointer w-full items-center justify-center overflow-hidden rounded-lg h-12 py-2 px-5 text-white text-base font-bold"
+    class="cursor-pointer w-full items-center justify-center overflow-hidden rounded-full h-12 py-2 px-5 text-white text-base font-bold"
     :class="computedColor"
   >
     <slot />

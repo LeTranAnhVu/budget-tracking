@@ -75,13 +75,7 @@ function createNewCategory(value: string, supCategoryId: number): void {
 
     <div class="mt-10 flex flex-col gap-4">
       <Button @click="save">
-        Save
-      </Button>
-      <Button
-        color="danger"
-        @click="save"
-      >
-        Delete
+        Update
       </Button>
     </div>
   </div>
