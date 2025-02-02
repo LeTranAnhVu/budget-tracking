@@ -7,6 +7,9 @@ import Container from './components/Container.vue'
     <Container>
       <router-view />
     </Container>
+    <div class="text-sm text-gray-500 text-center py-2">
+      v1.0.0
+    </div>
   </div>
 </template>
 
