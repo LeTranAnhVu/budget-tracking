@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type CategoryDto from '@/models/CategoryDto'
 import Button from '@/components/Button.vue'
 import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import date2Str from '@/helpers/date2Str'
@@ -28,11 +29,23 @@ const maintaince = [
   { id: 12, name: 'servicing' },
 ]
 
-const categories = {
-  ingredients,
-  packaging,
-  fuel,
-  maintaince,
+const categories: Record<string, { id: number, categories: CategoryDto[] }> = {
+  ingredients: {
+    id: 1,
+    categories: ingredients,
+  },
+  packaging: {
+    id: 2,
+    categories: packaging,
+  },
+  fuel: {
+    id: 3,
+    categories: fuel,
+  },
+  maintaince: {
+    id: 4,
+    categories: maintaince,
+  },
 }
 
 const form = reactive({
@@ -43,6 +56,10 @@ const form = reactive({
 })
 function save(): void {
   console.error('save', form)
+}
+
+function createNewCategory(value: string, supCategoryId: number): void {
+  console.warn('new category', value, supCategoryId)
 }
 </script>
 
@@ -61,8 +78,9 @@ function save(): void {
 
     <div>
       <ExpenseForm
-        v-model="form"
+        v-model:expense-form="form"
         :categories="categories"
+        @new-category-save="createNewCategory"
       />
     </div>
 

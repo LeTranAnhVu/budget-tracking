@@ -3,7 +3,7 @@ import type CategoryDto from '@/models/CategoryDto'
 import Button from '@/components/Button.vue'
 import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import date2Str from '@/helpers/date2Str'
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 
 const ingredients = [
   { id: 1, name: 'milk' },
@@ -56,7 +56,7 @@ const form = reactive({
 })
 
 function createNewCategory(value: string, supCategoryId: number): void {
-  console.log('new category', value, supCategoryId)
+  console.warn('new category', value, supCategoryId)
 }
 
 function save(): void {
