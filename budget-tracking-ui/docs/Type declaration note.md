@@ -41,6 +41,7 @@ Type declarations in TypeScript help us:
   declare global {
     interface Window {
       myAPI: string
+      // eslint-disable-next-line ts/method-signature-style
       helper(): void
     }
   }

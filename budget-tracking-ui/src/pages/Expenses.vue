@@ -3,9 +3,11 @@ import ExpenseCard from '@/components/ExpenseCard.vue'
 import FilterTags from '@/components/FilterTags.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
 import { routeNames } from '@/routes'
-import { ref } from 'vue'
+import { useAppStore } from '@/stores/appStore'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+const { getApi } = useAppStore()
 const selectedDate = ref('today')
 const selectedCategory = ref('all')
 
@@ -36,6 +38,15 @@ function handleDelete(): void {
 
 function addExpense(): void {
   router.push({ name: routeNames.addExpense })
+}
+
+onMounted(async () => {
+  await loadData()
+})
+
+async function loadData(): Promise<void> {
+  const expenses = await getApi().get('/expenses')
+  console.log(expenses)
 }
 </script>
 

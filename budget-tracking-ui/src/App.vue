@@ -1,9 +1,27 @@
 <script setup lang="ts">
 import Container from '@/components/Container.vue'
-import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header/Header.vue'
+import { useAuth } from './composables/useAuth'
+import { routeNames } from './routes'
+import { useAppStore } from './stores/appStore'
 
 const route = useRoute()
+const router = useRouter()
+const appStore = useAppStore()
+const { logout } = useAuth()
+function initialLoad(): void {
+  const env = import.meta.env
+  appStore.initializeApi(`${env.VITE_API_URL}/api`, () => {
+    logout()
+    router.push({ name: routeNames.login })
+  })
+}
+
+onMounted(async () => {
+  initialLoad()
+})
 </script>
 
 <template>
