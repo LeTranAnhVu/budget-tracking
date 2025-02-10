@@ -24,6 +24,7 @@ public class ExpenseService(IAppDbContext dbContext, IUserContext userContext) :
             Amount = payload.Amount,
             Note = payload.Note,
             Vat = payload.Vat,
+            PaidDate = payload.PaidDate,
             IncludedTax = payload.IncludedTax,
             Category = category
         };
@@ -43,6 +44,7 @@ public class ExpenseService(IAppDbContext dbContext, IUserContext userContext) :
         expense.Amount = payload.Amount;
         expense.Note = payload.Note;
         expense.Vat = payload.Vat;
+        expense.PaidDate = payload.PaidDate;
         expense.IncludedTax = payload.IncludedTax;
         expense.Category = category;
 

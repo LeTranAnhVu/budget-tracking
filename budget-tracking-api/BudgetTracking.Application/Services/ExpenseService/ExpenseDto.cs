@@ -16,6 +16,8 @@ public record ExpenseDto
 
     public int CategoryId { get; set; }
 
+    public DateOnly PaidDate { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

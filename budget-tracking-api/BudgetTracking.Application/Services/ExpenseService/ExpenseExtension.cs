@@ -14,6 +14,7 @@ public static class ExpenseExtension
             Vat = expense.Vat,
             IncludedTax = expense.IncludedTax,
             CategoryId = expense.CategoryId,
+            PaidDate = expense.PaidDate,
             CreatedBy = expense.CreatedBy,
             CreatedAt = expense.CreatedAt,
             UpdatedAt = expense.UpdatedAt,

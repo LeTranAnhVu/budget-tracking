@@ -8,6 +8,8 @@ public record InputExpenseDto
 
     public double? Vat { get; init; }
 
+    public DateOnly PaidDate { get; set; }
+
     public required bool IncludedTax { get; init; }
 
     public required int CategoryId { get; init; }

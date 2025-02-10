@@ -18,6 +18,7 @@ public class CategoryService(IUserContext userContext, IAppDbContext dbContext) 
 
     public CategoryDto Map(Category category) => new CategoryDto()
     {
+        Id = category.Id,
         Expenses = category.Expenses.Select(ex => ex.ToExpenseDto()).ToList(),
         Name = category.Name,
         SupCategoryName = category.SupCategory.Name,
