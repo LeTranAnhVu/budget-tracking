@@ -8,31 +8,48 @@ import { routeNames } from '@/routes'
 import { useAppStore } from '@/stores/appStore'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
 
 const appStore = useAppStore()
 const { getApi } = useAppStore()
 const selectedDate = ref('all-time')
-const selectedCategory = ref('all')
+const selectedCategory = ref(-1)
 
 const dateOptions = [
+  { id: 'all-time', name: 'All Time', value: null },
   { id: 'today', name: 'Today', value: 1 },
   { id: 'this-week', name: 'This Week', value: 7 },
   { id: 'last-7-days', name: 'Last 7 Days', value: 7 },
   { id: 'this-month', name: 'This Month', value: 30 },
-  { id: 'all-time', name: 'All Time', value: null },
 ]
-
-const categoryOptions = [
-  { id: 'all', name: 'All' },
-  { id: 'ingredients', name: 'Ingredients' },
-  { id: 'packaging', name: 'Packaging' },
-  { id: 'fuel', name: 'Fuel' },
-  { id: 'maintenance', name: 'Maintenance' },
-]
-
 const expenses = ref<ExpenseDto[]>([])
 const router = useRouter()
 
+const availableCategoryIds = ref<number[]>([])
+const supCategoryOptions = ref<{id: number, name: string}[]>([]) 
+
+function getAvailableCategoryIds(): number[] {
+  const raw = expenses.value.reduce((acc, ex) => {
+    if(!acc[ex.categoryId]){
+        acc[ex.categoryId] = 1
+    }
+    return acc
+  }, {} as Record<number, number>)
+
+  return Object.keys(raw).map(Number)
+}
+
+function getSupCatetoryOptions (): {id: number, name: string}[] {
+  const result = useSupCategoriesStore().supCategories.filter(sup => {
+    return sup.categories.find(cat => availableCategoryIds.value.includes(cat.id))
+  }).map((s) => {
+    return {id: s.id, name: s.name}
+  })
+
+  result.unshift({id: -1, name: 'All'})
+
+  return result
+}
 const totalAmount = computed(() => {
   const sum = expenses.value.reduce((acc, c) => acc + c.amount, 0)
   return toCurrency(sum)
@@ -53,6 +70,8 @@ function addExpense(): void {
 
 onMounted(async () => {
   await loadData()
+  availableCategoryIds.value = getAvailableCategoryIds()
+  supCategoryOptions.value = getSupCatetoryOptions()
 })
 
 function buildQueryParam(): string {
@@ -63,10 +82,17 @@ function buildQueryParam(): string {
     params += `daysAgo=${selectedDaysAgo}`
   }
 
+  if(selectedCategory.value !== -1) {
+    const supCategoryId = supCategoryOptions.value.find(o => o.id === selectedCategory.value)?.id
+    if(supCategoryId) {
+      params += `supCategoryId=${supCategoryId}`
+
+    }
+  }
   return params ? `?${params}` : ''
 }
 
-watch(selectedDate, async () => {
+watch([selectedDate, selectedCategory], async () => {
   await loadData()
 })
 
@@ -87,11 +113,10 @@ async function loadData(): Promise<void> {
         v-model="selectedDate"
         :options="dateOptions"
       />
-
       <!-- Category Tags -->
       <FilterTags
         v-model="selectedCategory"
-        :options="categoryOptions"
+        :options="supCategoryOptions"
       />
     </div>
 

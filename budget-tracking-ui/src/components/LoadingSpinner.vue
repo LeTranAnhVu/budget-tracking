@@ -21,21 +21,5 @@ defineProps<{
 </template>
 
 <style>
-@keyframes drop-in {
-  0% { transform: translateY(-100%); }
-  70% { transform: translateY(20%); }
-  100% { transform: translateY(0%); }
-}
 
-@keyframes fly-out {
-  0% { transform: translateY(0); }
-  2% { transform: translateY(5%); }
-  10% { transform: translateY(10%); }
-  100% { transform: translateY(-240%); }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
 </style>
