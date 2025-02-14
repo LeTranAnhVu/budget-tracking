@@ -1,4 +1,5 @@
 ﻿using BudgetTracking.Application.Services.ExpenseService;
+using BudgetTracking.Application.Services.SupCategoryService;
 using BudgetTracking.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 

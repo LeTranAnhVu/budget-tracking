@@ -12,12 +12,19 @@ public static class SupCategoryEndpoints
         var group = route.MapGroup("supCategories");
 
         group.MapGet("", GetHandler);
+        group.MapGet("withTransactions", GetAnyWithTransactionsHandler);
         return group;
     }
 
     private static async Task<Ok<List<SupCategoryDto>>> GetHandler(ISupCategoryService supCategoryService, CancellationToken ct)
     {
         var supCategoryDtos = await supCategoryService.GetAllAsync(ct);
+        return TypedResults.Ok(supCategoryDtos);
+    }
+
+    private static async Task<Ok<List<SupCategoryDto>>> GetAnyWithTransactionsHandler(ISupCategoryService supCategoryService, CancellationToken ct)
+    {
+        var supCategoryDtos = await supCategoryService.GetAnyWithTransactionsAsync(ct);
         return TypedResults.Ok(supCategoryDtos);
     }
 }

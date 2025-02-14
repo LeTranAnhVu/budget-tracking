@@ -1,6 +1,7 @@
-﻿namespace BudgetTracking.Application.Services.CategoryService;
+﻿namespace BudgetTracking.Application.Services.SupCategoryService;
 
-public interface ICategoryService
+public interface ISupCategoryService
 {
-    public Task<List<CategoryDto>> GetAllAsync(CancellationToken ct);
+    public Task<List<SupCategoryDto>> GetAllAsync(CancellationToken ct);
+    public Task<List<SupCategoryDto>> GetAnyWithTransactionsAsync(CancellationToken ct);
 }

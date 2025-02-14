@@ -2,7 +2,7 @@
 
 namespace BudgetTracking.Application.Services.CategoryService;
 
-public interface ISupCategoryService
+public interface ICategoryService
 {
-    public Task<List<SupCategoryDto>> GetAllAsync(CancellationToken ct);
+    public Task<List<CategoryDto>> GetAllAsync(CancellationToken ct);
 }

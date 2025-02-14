@@ -16,6 +16,16 @@ public class SupCategoryService(IUserContext userContext, IAppDbContext dbContex
         return supCategories.Select(Map).ToList();
     }
 
+    public async Task<List<SupCategoryDto>> GetAnyWithTransactionsAsync(CancellationToken ct)
+    {
+        var supCategories = await dbContext.SupCategories
+            .Include(c => c.Categories)
+            .ThenInclude(c => c.Expenses)
+            .ToListAsync(ct);
+
+        return supCategories.Select(Map).ToList();
+    }
+
     public SupCategoryDto Map(SupCategory supCategory) => new SupCategoryDto()
     {
         Id = supCategory.Id,
