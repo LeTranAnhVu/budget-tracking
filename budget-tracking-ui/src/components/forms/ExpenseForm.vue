@@ -12,28 +12,29 @@ import SingleSelectorCreateForm from '@/components/SingleSelector/SingleSelector
 import TextArea from '@/components/TextArea.vue'
 import { CURRENCY } from '@/constants'
 import { computed } from 'vue'
-
-const props = defineProps<{
-  categories: Record<string, { id: number, categories: CategoryDto[] }>
-}>()
+import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
 
 const emit = defineEmits<{
   newCategorySave: [value: string, supCategoryId: number]
 }>()
 
+const supCategoryStore = useSupCategoriesStore()
+
 const form = defineModel<{
   amount: number
-  date: string
-  notes: string
+  paidDate: string
+  note: string
   categoryId: number
 }>('expenseForm', { required: true })
 
+const supCategories = computed(() => supCategoryStore.supCategories)
+
 const mappedCategories = computed < Record<string, { id: number, categories: SingleSelectorItem[] }>>(() => {
   const result: Record<string, { id: number, categories: SingleSelectorItem[] }> = {}
-  for (const [key, childrenCategories] of Object.entries(props.categories)) {
-    result[key] = {
-      id: childrenCategories.id,
-      categories: childrenCategories.categories.map(c => ({ name: c.name, value: c.id } as SingleSelectorItem)),
+  for (const supCategory of supCategories.value) {
+    result[supCategory.name] = {
+      id: supCategory.id,
+      categories: supCategory.categories.map(c => ({ name: c.name, value: c.id } as SingleSelectorItem)),
     }
   }
 
@@ -41,8 +42,8 @@ const mappedCategories = computed < Record<string, { id: number, categories: Sin
 })
 
 const selectedCategory = computed<CategoryDto | null>(() => {
-  const items = Object.values(props.categories).flatMap(item => item.categories)
-  return items.find(item => form.value.categoryId === item.id) || null
+  const categories = supCategories.value.flatMap(item => item.categories)
+  return categories.find(category => form.value.categoryId === category.id) || null
 })
 
 function saveNewCategory(value: string, supCategoryId: number): void {
@@ -99,7 +100,7 @@ function saveNewCategory(value: string, supCategoryId: number): void {
     </div>
 
     <DateInput
-      v-model="form.date"
+      v-model="form.paidDate"
       label="Date"
     >
       <template #icon>
@@ -107,7 +108,7 @@ function saveNewCategory(value: string, supCategoryId: number): void {
       </template>
     </DateInput>
     <TextArea
-      v-model="form.notes"
+      v-model="form.note"
       label="Note"
       placeholder="Add notes"
     />

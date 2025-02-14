@@ -1,22 +1,24 @@
 <script setup lang="ts">
+import type ExpenseDto from '@/models/ExpenseDto'
 import ExpenseCard from '@/components/ExpenseCard.vue'
 import FilterTags from '@/components/FilterTags.vue'
 import PlusIcon from '@/components/icons/PlusIcon.vue'
+import toCurrency from '@/helpers/toCurrency'
 import { routeNames } from '@/routes'
 import { useAppStore } from '@/stores/appStore'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const { getApi } = useAppStore()
-const selectedDate = ref('today')
+const selectedDate = ref('all-time')
 const selectedCategory = ref('all')
 
 const dateOptions = [
-  { id: 'today', name: 'Today' },
-  { id: 'this-week', name: 'This Week' },
-  { id: 'last-7-days', name: 'Last 7 Days' },
-  { id: 'this-month', name: 'This Month' },
-  { id: 'all-time', name: 'All Time' },
+  { id: 'today', name: 'Today', value: 1 },
+  { id: 'this-week', name: 'This Week', value: 7 },
+  { id: 'last-7-days', name: 'Last 7 Days', value: 7 },
+  { id: 'this-month', name: 'This Month', value: 30 },
+  { id: 'all-time', name: 'All Time', value: null },
 ]
 
 const categoryOptions = [
@@ -27,13 +29,21 @@ const categoryOptions = [
   { id: 'maintenance', name: 'Maintenance' },
 ]
 
+const expenses = ref<ExpenseDto[]>([])
 const router = useRouter()
 
+const totalAmount = computed(() => {
+  const sum = expenses.value.reduce((acc, c) => acc + c.amount, 0)
+  return toCurrency(sum)
+})
 function handleEdit(id: number): void {
   router.push({ name: routeNames.editExpense, params: { id } })
 }
 
-function handleDelete(): void {
+async function handleDelete(id: number): Promise<void> {
+  await getApi().delete(`/expenses/${id}`)
+
+  await loadData()
 }
 
 function addExpense(): void {
@@ -44,9 +54,24 @@ onMounted(async () => {
   await loadData()
 })
 
+function buildQueryParam(): string {
+  let params = ''
+  const selectedDayAgo = dateOptions.find(o => o.id === selectedDate.value)?.value
+
+  if (selectedDayAgo) {
+    params += `dayAgo=${selectedDayAgo}`
+  }
+
+  return params ? `?${params}` : ''
+}
+
+watch(selectedDate, async () => {
+  await loadData()
+})
+
 async function loadData(): Promise<void> {
-  const expenses = await getApi().get('/expenses')
-  console.log(expenses)
+  const params = buildQueryParam()
+  expenses.value = await getApi().get(`/expenses${params}`)
 }
 </script>
 
@@ -71,40 +96,18 @@ async function loadData(): Promise<void> {
     <div class="bg-white rounded-2xl p-4 shadow mb-4">
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Total Expenses</span>
-        <span class="text-xl font-bold text-gray-800">$2,450.00</span>
+        <span class="text-xl font-bold text-gray-800">{{ totalAmount }}</span>
       </div>
     </div>
 
     <!-- Expenses List -->
     <div class="space-y-4">
       <ExpenseCard
-        date="Mar 15, 2024"
-        title="Milk"
-        :amount="250.00"
-        description="Monthly milk supply for ice cream production"
-        category="Ingredients"
-        @edit="() => handleEdit(1)"
-        @delete="handleDelete"
-      />
-
-      <ExpenseCard
-        date="Mar 14, 2024"
-        title="Cups"
-        :amount="150.00"
-        description="Paper cups stock replenishment"
-        category="Ingredients"
-        @edit="() => handleEdit(2)"
-        @delete="handleDelete"
-      />
-
-      <ExpenseCard
-        date="Mar 13, 2024"
-        title="Repairs"
-        :amount="500.00"
-        description="Ice cream machine maintenance"
-        category="Maintenance"
-        @edit="() => handleEdit(3)"
-        @delete="handleDelete"
+        v-for="expense in expenses"
+        :key="expense.id"
+        :expense="expense"
+        @edit="() => handleEdit(expense.id)"
+        @delete="handleDelete(expense.id)"
       />
     </div>
 

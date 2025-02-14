@@ -6,21 +6,28 @@ import Header from './components/Header/Header.vue'
 import { useAuth } from './composables/useAuth'
 import { routeNames } from './routes'
 import { useAppStore } from './stores/appStore'
+import { useCategoriesStore } from './stores/categoriesStore'
+import { useSupCategoriesStore } from './stores/supCategoriesStore'
 
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
+const catStore = useCategoriesStore()
+const supCatStore = useSupCategoriesStore()
 const { logout } = useAuth()
-function initialLoad(): void {
+async function initialLoad(): Promise<void> {
   const env = import.meta.env
   appStore.initializeApi(`${env.VITE_API_URL}/api`, () => {
     logout()
     router.push({ name: routeNames.login })
   })
+
+  await supCatStore.loadSupCategories()
+  await catStore.loadCategories()
 }
 
 onMounted(async () => {
-  initialLoad()
+  await initialLoad()
 })
 </script>
 

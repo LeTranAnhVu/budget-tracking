@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-// import ChevronDownIcon from './icons/ChevronDownIcon.vue'
+import type ExpenseDto from '@/models/ExpenseDto'
+import { formatDate } from '@/helpers/dateUtils'
+import toCurrency from '@/helpers/toCurrency'
+import { useCategoriesStore } from '@/stores/categoriesStore'
+import { computed, ref } from 'vue'
 import CaretDownIcon from './icons/CaretDownIcon.vue'
 import EditIcon from './icons/EditIcon.vue'
 import TrashIcon from './icons/TrashIcon.vue'
 
-defineProps<{
-  date: string
-  title: string
-  amount: number
-  description: string
-  category: string
+const props = defineProps<{
+  expense: ExpenseDto
 }>()
-
 const emit = defineEmits<{
   edit: []
   delete: []
 }>()
+const catStore = useCategoriesStore()
+
+const category = computed(() => catStore.categories.find(cat => cat.id === props.expense.categoryId))
+const displayedDate = computed(() => formatDate(props.expense.createdAt))
 
 const isExpanded = ref(false)
 </script>
@@ -28,21 +30,21 @@ const isExpanded = ref(false)
       @click="isExpanded = !isExpanded"
     >
       <div>
-        <span class="text-sm text-gray-500">{{ date }}</span>
+        <span class="text-sm text-gray-500">{{ displayedDate }}</span>
         <h3 class="font-medium text-gray-800 mt-1">
-          {{ title }}
+          {{ category?.name || 'Unknown' }}
         </h3>
       </div>
       <div class="flex flex-col items-end gap-2">
         <div class="flex items-center gap-2">
-          <span class="font-bold text-gray-800">${{ amount.toFixed(2) }}</span>
+          <span class="font-bold text-gray-800">{{ toCurrency(expense.amount) }}</span>
           <CaretDownIcon
             :is-rotated="isExpanded"
             class="h-5 w-5 text-gray-400"
           />
         </div>
         <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
-          {{ category }}
+          {{ category?.supCategoryName || 'Unknown' }}
         </span>
       </div>
     </div>
@@ -53,7 +55,7 @@ const isExpanded = ref(false)
       class="mt-3 pt-3 border-dashed text-gray-200"
     >
       <p class="text-gray-600 text-sm mb-3">
-        {{ description }}
+        {{ expense.note }}
       </p>
       <div class="flex justify-end gap-3">
         <button
