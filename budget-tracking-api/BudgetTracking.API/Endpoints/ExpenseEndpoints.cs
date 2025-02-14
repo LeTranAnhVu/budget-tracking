@@ -19,9 +19,9 @@ public static class ExpenseEndpoints
         return group;
     }
 
-    private static async Task<Ok<List<ExpenseDto>>> GetHandler([FromQuery] int? dayAgo, [FromQuery] int? supCategoryId, IExpenseService expenseService, CancellationToken ct)
+    private static async Task<Ok<List<ExpenseDto>>> GetHandler([FromQuery] int? daysAgo, [FromQuery] int? supCategoryId, IExpenseService expenseService, CancellationToken ct)
     {
-        var expenses = await expenseService.GetAllAsync(new FilterExpenseDto(dayAgo, supCategoryId), ct);
+        var expenses = await expenseService.GetAllAsync(new FilterExpenseDto(daysAgo, supCategoryId), ct);
         return TypedResults.Ok(expenses);
     }
 

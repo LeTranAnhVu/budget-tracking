@@ -8,12 +8,12 @@ public class ExpenseService(IAppDbContext dbContext, IUserContext userContext) :
 {
     public async Task<List<ExpenseDto>> GetAllAsync(FilterExpenseDto filterDto, CancellationToken ct)
     {
-        var dayAgo = filterDto.DayAgo ?? 0;
+        var daysAgo = filterDto.DaysAgo ?? 0;
         var queryable = dbContext.Expenses.Include(e => e.Category).AsQueryable();
 
-        if (dayAgo != 0)
+        if (daysAgo != 0)
         {
-            var dateAgos = DateOnly.FromDateTime(DateTime.Now).AddDays(0 - dayAgo);
+            var dateAgos = DateOnly.FromDateTime(DateTime.Now).AddDays(0 - daysAgo);
             queryable = queryable.Where(e =>
                 e.CreatedBy == userContext.Id && e.PaidDate >= dateAgos);
         }

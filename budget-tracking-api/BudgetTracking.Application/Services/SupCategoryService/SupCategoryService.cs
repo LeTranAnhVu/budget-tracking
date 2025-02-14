@@ -16,13 +16,27 @@ public class SupCategoryService(IUserContext userContext, IAppDbContext dbContex
         return supCategories.Select(Map).ToList();
     }
 
-    public async Task<List<SupCategoryDto>> GetAnyWithTransactionsAsync(CancellationToken ct)
+    public async Task<List<SupCategoryDto>> GetAnyWithTransactionsAsync(int? daysAgo, CancellationToken ct)
     {
-        var supCategories = await dbContext.SupCategories
-            .Include(c => c.Categories)
-            .ThenInclude(c => c.Expenses)
-            .ToListAsync(ct);
+        var queryable = dbContext.SupCategories.AsQueryable();
 
+
+        if (daysAgo.HasValue)
+        {
+            var dateAgos = DateOnly.FromDateTime(DateTime.Now).AddDays(0 - daysAgo ?? 0);
+
+            queryable = queryable
+                .Include(c => c.Categories)
+                .ThenInclude(c => c.Expenses.Where(ex => ex.PaidDate >= dateAgos));
+        }
+        else
+        {
+            queryable = queryable
+                .Include(c => c.Categories)
+                .ThenInclude(c => c.Expenses);
+        }
+
+        var supCategories = await queryable.ToListAsync(ct);
         return supCategories.Select(Map).ToList();
     }
 
