@@ -11,8 +11,8 @@ import SingleSelectorCreateForm from '@/components/SingleSelector/SingleSelector
 
 import TextArea from '@/components/TextArea.vue'
 import { CURRENCY } from '@/constants'
-import { computed } from 'vue'
 import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
+import { computed } from 'vue'
 
 const emit = defineEmits<{
   newCategorySave: [value: string, supCategoryId: number]

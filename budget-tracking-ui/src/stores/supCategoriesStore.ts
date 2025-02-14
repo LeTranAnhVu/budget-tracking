@@ -8,7 +8,7 @@ export const useSupCategoriesStore = defineStore('supCategories', () => {
   const appStore = useAppStore()
 
   async function loadSupCategories(): Promise<void> {
-    supCategories.value = await appStore.getApi().get('/supCategories')
+    supCategories.value = await appStore.getApi().get<SupCategoryDto[]>('/sup-categories')
   }
 
   return {

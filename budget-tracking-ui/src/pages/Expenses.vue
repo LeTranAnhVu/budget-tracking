@@ -57,10 +57,10 @@ onMounted(async () => {
 
 function buildQueryParam(): string {
   let params = ''
-  const selectedDayAgo = dateOptions.find(o => o.id === selectedDate.value)?.value
+  const selectedDaysAgo = dateOptions.find(o => o.id === selectedDate.value)?.value
 
-  if (selectedDayAgo) {
-    params += `dayAgo=${selectedDayAgo}`
+  if (selectedDaysAgo) {
+    params += `daysAgo=${selectedDaysAgo}`
   }
 
   return params ? `?${params}` : ''

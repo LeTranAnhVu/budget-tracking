@@ -1,22 +1,25 @@
 <script setup lang="ts">
+import type SupCategoryDto from '@/models/SupCategoryDto'
 import XBar from '@/components/XBar.vue'
 import toCurrency from '@/helpers/toCurrency'
+import { useAppStore } from '@/stores/appStore'
 import { computed, onMounted, ref } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   days: number
 }>()
 
-const initialValue = 0
+const appStore = useAppStore()
 const loadedData = ref(false)
-const changedPercent = -12
-const data = ref([
-  { name: 'Ingredients', value: initialValue },
-  { name: 'Packaging', value: initialValue },
-  { name: 'Fuel', value: initialValue },
-  { name: 'Maintaince', value: initialValue },
-])
-
+const supCategories = ref<SupCategoryDto[]>([])
+const data = computed(() => {
+  return supCategories.value.map((sup) => {
+    return {
+      name: sup.name,
+      value: sup.categories.flatMap(c => c.expenses).reduce((acc, ex) => acc + ex.amount, 0),
+    }
+  }).filter(d => d.value !== 0)
+})
 const mostSpendingAmount = computed(() => {
   return Math.max(...data.value.map(i => i.value))
 })
@@ -25,16 +28,9 @@ const totalAmount = computed(() => {
   return data.value.reduce((acc, current) => acc + current.value, 0)
 })
 
-function loadData(): void {
-  setTimeout(() => {
-    data.value = [
-      { name: 'Ingredients', value: 105.32 },
-      { name: 'Packaging', value: 235.4 },
-      { name: 'Fuel', value: 200.6 },
-      { name: 'Maintaince', value: 590.8 },
-    ]
-    loadedData.value = true
-  }, 1000)
+async function loadData(): Promise<void> {
+  supCategories.value = await appStore.getApi().get<SupCategoryDto[]>(`/sup-categories/with-transactions?daysAgo=${props.days}`)
+  loadedData.value = true
 }
 
 function calcRatio(value: number): number {
@@ -45,12 +41,8 @@ function random100(): number {
   return Math.floor(Math.random() * 500 + 100)
 }
 
-function presentNumberWithIndicator(numb: number): string {
-  const symbol = numb > 0 ? '+' : ''
-  return symbol + numb.toString()
-}
-onMounted(() => {
-  loadData()
+onMounted(async () => {
+  await loadData()
 })
 </script>
 
@@ -61,7 +53,6 @@ onMounted(() => {
     </p>
     <p class="font-sm font-medium text-gray-400 text-sm">
       Last {{ days }} days
-      <span :class="changedPercent < 0 ? 'text-green-600' : changedPercent > 0 ? 'text-red-600' : '' ">{{ presentNumberWithIndicator(changedPercent) }}%</span>
     </p>
     <div class="flex flex-col gap-4 mt-5">
       <div

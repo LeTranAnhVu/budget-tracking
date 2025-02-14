@@ -18,7 +18,7 @@ const emit = defineEmits<{
 const supCategoriesStore = useSupCategoriesStore()
 
 const category = computed(() => supCategoriesStore.supCategories.flatMap(sup => sup.categories).find(cat => cat.id === props.expense.categoryId))
-const displayedDate = computed(() => formatDate(props.expense.createdAt))
+const displayedDate = computed(() => formatDate(props.expense.paidDate))
 
 const isExpanded = ref(false)
 </script>

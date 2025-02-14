@@ -4,7 +4,6 @@ import SlimItem from '@/components/SlimItem.vue'
 import { CURRENCY } from '@/constants'
 import toCurrency from '@/helpers/toCurrency'
 import { useAppStore } from '@/stores/appStore'
-import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
 import { computed, onMounted, ref } from 'vue'
 
 const supCategories = ref<SupCategoryDto[]>([])
@@ -57,7 +56,7 @@ function handleClick(id: string): void {
 
 async function loadData(): Promise<void> {
   appStore.isLoading = true
-  supCategories.value = await appStore.getApi().get<SupCategoryDto[]>('/supCategories/withTransactions')
+  supCategories.value = await appStore.getApi().get<SupCategoryDto[]>('/sup-categories/with-transactions')
   appStore.isLoading = false
 }
 

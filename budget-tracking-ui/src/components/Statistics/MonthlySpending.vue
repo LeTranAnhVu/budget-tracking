@@ -1,5 +1,27 @@
 <script setup lang="ts">
+import type ExpenseDto from '@/models/ExpenseDto'
 import BarChart from '@/components/charts/BarChart.vue'
+import { MONTHS } from '@/constants'
+import { getThreeLetterMonth } from '@/helpers/dateUtils'
+import { computed } from 'vue'
+
+const props = defineProps<{
+  expenses: ExpenseDto[]
+}>()
+
+const monthlyAmounts = computed<number[]>(() => {
+  const aggre = props.expenses.reduce((acc, ex) => {
+    const month = getThreeLetterMonth(ex.paidDate)
+    if (!acc[month]) {
+      acc[month] = 0
+    }
+
+    acc[month] += ex.amount
+    return acc
+  }, {} as Record<string, number>)
+
+  return MONTHS.map(mo => aggre[mo] || 0)
+})
 </script>
 
 <template>
@@ -11,8 +33,8 @@ import BarChart from '@/components/charts/BarChart.vue'
       <BarChart
         color="red"
         label="Expense"
-        :y="[1, 12, 24, 43, 16, 43, 32, 56, 45, 67, 34, 11]"
-        :x="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
+        :y="[...monthlyAmounts]"
+        :x="[...MONTHS]"
       />
     </div>
   </div>
