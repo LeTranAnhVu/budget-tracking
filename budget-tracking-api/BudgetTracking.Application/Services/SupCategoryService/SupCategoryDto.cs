@@ -1,18 +1,14 @@
-﻿using BudgetTracking.Application.Services.ExpenseService;
-using BudgetTracking.Domain.Models;
+﻿using BudgetTracking.Application.Services.CategoryService;
 
-namespace BudgetTracking.Application.Services.CategoryService;
+namespace BudgetTracking.Application.Services.SupCategoryService;
 
-public record CategoryDto
+public record SupCategoryDto
 {
     public int Id { get; set; }
-    public string Name { get; set; } = null!;
 
-    public string SupCategoryName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public string MetaDescription { get; set; } = null!;
 
-    public int SupCategoryId { get; set; }
-
-    public List<ExpenseDto> Expenses { get; set; } = new List<ExpenseDto>();
+    public List<CategoryDto> Categories { get; set; } = [];
 }

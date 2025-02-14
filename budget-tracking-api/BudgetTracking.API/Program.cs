@@ -89,5 +89,6 @@ api.MapGet("test", (IUserContext userContext) =>
 api.AddAuthEndpoints();
 api.AddExpenseEndpoints();
 api.AddCategoryEndpoints();
+api.AddSupCategoryEndpoints();
 
 app.Run();

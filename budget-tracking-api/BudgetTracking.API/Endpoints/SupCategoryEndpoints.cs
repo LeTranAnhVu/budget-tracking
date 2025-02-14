@@ -1,22 +1,23 @@
 ﻿
 using BudgetTracking.Application.Services.CategoryService;
+using BudgetTracking.Application.Services.SupCategoryService;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BudgetTracking.API.Endpoints;
 
-public static class CategoryEndpoints
+public static class SupCategoryEndpoints
 {
-    public static RouteGroupBuilder AddCategoryEndpoints(this RouteGroupBuilder route)
+    public static RouteGroupBuilder AddSupCategoryEndpoints(this RouteGroupBuilder route)
     {
-        var group = route.MapGroup("categories");
+        var group = route.MapGroup("supCategories");
 
         group.MapGet("", GetHandler);
         return group;
     }
 
-    private static async Task<Ok<List<CategoryDto>>> GetHandler(ICategoryService categoryService, CancellationToken ct)
+    private static async Task<Ok<List<SupCategoryDto>>> GetHandler(ISupCategoryService supCategoryService, CancellationToken ct)
     {
-        var categories = await categoryService.GetAllAsync(ct);
-        return TypedResults.Ok(categories);
+        var supCategoryDtos = await supCategoryService.GetAllAsync(ct);
+        return TypedResults.Ok(supCategoryDtos);
     }
 }

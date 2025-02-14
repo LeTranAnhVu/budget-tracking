@@ -6,14 +6,34 @@ namespace BudgetTracking.Application.Services.ExpenseService;
 
 public class ExpenseService(IAppDbContext dbContext, IUserContext userContext) : IExpenseService
 {
-    public async Task<List<ExpenseDto>> GetAllAsync(CancellationToken ct)
+    public async Task<List<ExpenseDto>> GetAllAsync(FilterExpenseDto filterDto, CancellationToken ct)
     {
-        var expenses = await dbContext.Expenses
-            .Where(e =>
-                e.CreatedBy == userContext.Id)
+        var dayAgo = filterDto.DayAgo ?? 0;
+        var queryable = dbContext.Expenses.Include(e => e.Category).AsQueryable();
+
+        if (dayAgo != 0)
+        {
+            var dateAgos = DateOnly.FromDateTime(DateTime.Now).AddDays(0 - dayAgo);
+            queryable = queryable.Where(e =>
+                e.CreatedBy == userContext.Id && e.PaidDate >= dateAgos);
+        }
+
+        if (filterDto.SupCategoryId.HasValue)
+        {
+            queryable = queryable.Where(e => e.Category.SupCategoryId == filterDto.SupCategoryId);
+        }
+
+        var expenses = await queryable
+            .OrderByDescending(e => e.PaidDate)
             .ToListAsync(ct);
 
         return expenses.Select(e => e.ToExpenseDto()).ToList();
+    }
+
+    public async Task<ExpenseDto> GetOneAsync(int id, CancellationToken ct)
+    {
+        var expense = await dbContext.Expenses.GetOrNotFoundAsync(e => e.Id == id && e.CreatedBy == userContext.Id, ct);
+        return expense.ToExpenseDto();
     }
 
     public async Task<ExpenseDto> CreateOneAsync(InputExpenseDto payload, CancellationToken ct)

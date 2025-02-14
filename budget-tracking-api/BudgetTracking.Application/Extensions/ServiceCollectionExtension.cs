@@ -3,6 +3,7 @@ using BudgetTracking.Application.Repositories.User;
 using BudgetTracking.Application.Services.AuthService;
 using BudgetTracking.Application.Services.CategoryService;
 using BudgetTracking.Application.Services.ExpenseService;
+using BudgetTracking.Application.Services.SupCategoryService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtension
       services.AddScoped<IExpenseService, ExpenseService>();
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<ICategoryService, CategoryService>();
+      services.AddScoped<ISupCategoryService, SupCategoryService>();
       return services;
    }
 }

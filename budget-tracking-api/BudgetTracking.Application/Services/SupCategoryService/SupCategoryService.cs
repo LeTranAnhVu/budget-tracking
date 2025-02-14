@@ -1,28 +1,26 @@
-﻿using BudgetTracking.Application.Services.ExpenseService;
+﻿using BudgetTracking.Application.Services.CategoryService;
+using BudgetTracking.Application.Services.ExpenseService;
 using BudgetTracking.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BudgetTracking.Application.Services.CategoryService;
+namespace BudgetTracking.Application.Services.SupCategoryService;
 
-public class CategoryService(IUserContext userContext, IAppDbContext dbContext) : ICategoryService
+public class SupCategoryService(IUserContext userContext, IAppDbContext dbContext) : ISupCategoryService
 {
-    public async Task<List<CategoryDto>> GetAllAsync(CancellationToken ct)
+    public async Task<List<SupCategoryDto>> GetAllAsync(CancellationToken ct)
     {
-        var categories = await dbContext.Categories
-            .Include(c => c.SupCategory)
-            .Include(c => c.Expenses)
+        var supCategories = await dbContext.SupCategories
+            .Include(c => c.Categories)
             .ToListAsync(ct);
 
-        return categories.Select(Map).ToList();
+        return supCategories.Select(Map).ToList();
     }
 
-    public CategoryDto Map(Category category) => new CategoryDto()
+    public SupCategoryDto Map(SupCategory supCategory) => new SupCategoryDto()
     {
-        Id = category.Id,
-        Expenses = category.Expenses.Select(ex => ex.ToExpenseDto()).ToList(),
-        Name = category.Name,
-        SupCategoryName = category.SupCategory.Name,
-        MetaDescription = category.SupCategory.MetaDescription,
-        SupCategoryId = category.SupCategoryId,
+        Id = supCategory.Id,
+        Categories = supCategory.Categories.Select(cat => cat.ToCategoryDto()).ToList(),
+        Name = supCategory.Name,
+        MetaDescription = supCategory.MetaDescription,
     };
 }

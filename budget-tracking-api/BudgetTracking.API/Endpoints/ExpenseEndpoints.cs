@@ -1,5 +1,6 @@
 ﻿using BudgetTracking.Application.Services.ExpenseService;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetTracking.API.Endpoints;
 
@@ -10,6 +11,7 @@ public static class ExpenseEndpoints
         var group = route.MapGroup("expenses");
 
         group.MapGet("", GetHandler);
+        group.MapGet("{id}", GetOneHandler);
         group.MapPost("", CreateHandler);
         group.MapPut("{id}", UpdateHandler);
         group.MapDelete("{id}", DeleteHandler);
@@ -17,11 +19,18 @@ public static class ExpenseEndpoints
         return group;
     }
 
-    private static async Task<Ok<List<ExpenseDto>>> GetHandler(IExpenseService expenseService, CancellationToken ct)
+    private static async Task<Ok<List<ExpenseDto>>> GetHandler([FromQuery] int? dayAgo, [FromQuery] int? supCategoryId, IExpenseService expenseService, CancellationToken ct)
     {
-        var expenses = await expenseService.GetAllAsync(ct);
+        var expenses = await expenseService.GetAllAsync(new FilterExpenseDto(dayAgo, supCategoryId), ct);
         return TypedResults.Ok(expenses);
     }
+
+    private static async Task<Ok<ExpenseDto>> GetOneHandler(int id, IExpenseService expenseService, CancellationToken ct)
+    {
+        var expense = await expenseService.GetOneAsync(id, ct);
+        return TypedResults.Ok(expense);
+    }
+
     private static async Task<Created<ExpenseDto>> CreateHandler(InputExpenseDto dto, IExpenseService expenseService, CancellationToken ct)
     {
         var expense = await expenseService.CreateOneAsync(dto, ct);
@@ -34,9 +43,9 @@ public static class ExpenseEndpoints
         return TypedResults.Ok(expense);
     }
 
-    private static async Task<Ok> DeleteHandler(int id , IExpenseService expenseService, CancellationToken ct)
+    private static async Task<NoContent> DeleteHandler(int id , IExpenseService expenseService, CancellationToken ct)
     {
         await expenseService.DeleteOneAsync(id, ct);
-        return TypedResults.Ok();
+        return TypedResults.NoContent();
     }
 }

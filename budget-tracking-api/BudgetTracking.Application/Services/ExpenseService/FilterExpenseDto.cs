@@ -1,6 +1,3 @@
 ﻿namespace BudgetTracking.Application.Services.ExpenseService;
 
-public class FilterExpenseDto
-{
-    
-}
+public record FilterExpenseDto(int? DayAgo, int? SupCategoryId);
