@@ -3,16 +3,15 @@ import Container from '@/components/Container.vue'
 import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header/Header.vue'
+import LoadingSpinner from './components/LoadingSpinner.vue'
 import { useAuth } from './composables/useAuth'
 import { routeNames } from './routes'
 import { useAppStore } from './stores/appStore'
-import { useCategoriesStore } from './stores/categoriesStore'
 import { useSupCategoriesStore } from './stores/supCategoriesStore'
 
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
-const catStore = useCategoriesStore()
 const supCatStore = useSupCategoriesStore()
 const { logout } = useAuth()
 async function initialLoad(): Promise<void> {
@@ -23,7 +22,6 @@ async function initialLoad(): Promise<void> {
   })
 
   await supCatStore.loadSupCategories()
-  await catStore.loadCategories()
 }
 
 onMounted(async () => {
@@ -33,6 +31,7 @@ onMounted(async () => {
 
 <template>
   <div>
+    <LoadingSpinner :is-visible="appStore.throttledIsLoading" />
     <Header
       v-if="!route.meta.noHeader"
       class="sticky top-0 left-0 z-10 w-full"

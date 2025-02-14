@@ -24,6 +24,7 @@ async function save(): Promise<void> {
     return
   }
   await appStore.getApi().put(`/expenses/${route.params.id}`, form)
+  await loadData()
 }
 
 function createNewCategory(value: string, supCategoryId: number): void {
@@ -31,7 +32,9 @@ function createNewCategory(value: string, supCategoryId: number): void {
 }
 
 async function loadData(): Promise<void> {
+  appStore.isLoading = true
   expense.value = await appStore.getApi().get<ExpenseDto>(`/expenses/${route.params.id}`)
+  appStore.isLoading = false
 }
 
 onMounted(async () => {

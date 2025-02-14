@@ -9,6 +9,7 @@ import { useAppStore } from '@/stores/appStore'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+const appStore = useAppStore()
 const { getApi } = useAppStore()
 const selectedDate = ref('all-time')
 const selectedCategory = ref('all')
@@ -70,8 +71,10 @@ watch(selectedDate, async () => {
 })
 
 async function loadData(): Promise<void> {
+  appStore.isLoading = true
   const params = buildQueryParam()
   expenses.value = await getApi().get(`/expenses${params}`)
+  appStore.isLoading = false
 }
 </script>
 

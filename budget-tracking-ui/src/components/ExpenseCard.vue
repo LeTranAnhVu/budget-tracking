@@ -2,7 +2,7 @@
 import type ExpenseDto from '@/models/ExpenseDto'
 import { formatDate } from '@/helpers/dateUtils'
 import toCurrency from '@/helpers/toCurrency'
-import { useCategoriesStore } from '@/stores/categoriesStore'
+import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
 import { computed, ref } from 'vue'
 import CaretDownIcon from './icons/CaretDownIcon.vue'
 import EditIcon from './icons/EditIcon.vue'
@@ -15,9 +15,9 @@ const emit = defineEmits<{
   edit: []
   delete: []
 }>()
-const catStore = useCategoriesStore()
+const supCategoriesStore = useSupCategoriesStore()
 
-const category = computed(() => catStore.categories.find(cat => cat.id === props.expense.categoryId))
+const category = computed(() => supCategoriesStore.supCategories.flatMap(sup => sup.categories).find(cat => cat.id === props.expense.categoryId))
 const displayedDate = computed(() => formatDate(props.expense.createdAt))
 
 const isExpanded = ref(false)
