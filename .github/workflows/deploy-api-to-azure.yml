@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Allows manual trigger
 
 env:
-  AZURE_WEBAPP_NAME: your-app-name    # Replace with your app name
+  AZURE_WEBAPP_NAME: brianle-budget-tracker-api    # Replace with your app name
   AZURE_WEBAPP_PACKAGE_PATH: './budget-tracking-api/BudgetTracking.API'  # Path to your API project
   DOTNET_VERSION: '9.0.x'             # Your project uses .NET 9
 
