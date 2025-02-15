@@ -1,13 +1,37 @@
 <script setup lang="ts">
 import Container from '@/components/Container.vue'
-import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header/Header.vue'
+import LoadingSpinner from './components/LoadingSpinner.vue'
+import { useAuth } from './composables/useAuth'
+import { routeNames } from './routes'
+import { useAppStore } from './stores/appStore'
+import { useSupCategoriesStore } from './stores/supCategoriesStore'
 
 const route = useRoute()
+const router = useRouter()
+const appStore = useAppStore()
+const supCatStore = useSupCategoriesStore()
+const { logout } = useAuth()
+async function initialLoad(): Promise<void> {
+  const env = import.meta.env
+  appStore.initializeApi(`${env.VITE_API_URL}/api`, () => {
+    logout()
+    router.push({ name: routeNames.login })
+  })
+
+  await supCatStore.loadSupCategories()
+}
+
+onMounted(async () => {
+  await initialLoad()
+})
 </script>
 
 <template>
   <div>
+    <LoadingSpinner :is-visible="appStore.throttledIsLoading" />
     <Header
       v-if="!route.meta.noHeader"
       class="sticky top-0 left-0 z-10 w-full"

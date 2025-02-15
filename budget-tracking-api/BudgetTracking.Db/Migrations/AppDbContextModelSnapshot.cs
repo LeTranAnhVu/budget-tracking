@@ -72,6 +72,9 @@ namespace BudgetTracking.Db.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<DateOnly>("PaidDate")
+                        .HasColumnType("date");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -150,12 +153,17 @@ namespace BudgetTracking.Db.Migrations
             modelBuilder.Entity("BudgetTracking.Domain.Models.Expense", b =>
                 {
                     b.HasOne("BudgetTracking.Domain.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Expenses")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("BudgetTracking.Domain.Models.Category", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 
             modelBuilder.Entity("BudgetTracking.Domain.Models.SupCategory", b =>

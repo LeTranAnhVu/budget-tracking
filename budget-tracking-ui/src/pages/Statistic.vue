@@ -1,18 +1,34 @@
 <script setup lang="ts">
+import type ExpenseDto from '@/models/ExpenseDto'
 import DaySpending from '@/components/Statistics/DaySpending.vue'
 import MonthlySpending from '@/components/Statistics/MonthlySpending.vue'
 import TotalSpending from '@/components/Statistics/TotalSpending.vue'
+import { useAppStore } from '@/stores/appStore'
+import { onMounted, ref } from 'vue'
+
+const expenses = ref<ExpenseDto[]>([])
+const appStore = useAppStore()
+
+async function loadData(): Promise<void> {
+  expenses.value = await appStore.getApi().get<ExpenseDto[]>('/expenses')
+}
+
+onMounted(async () => {
+  appStore.isLoading = true
+  await loadData()
+  appStore.isLoading = false
+})
 </script>
 
 <template>
   <div>
     <div class="flex flex-col gap-20 mt-5">
       <div>
-        <TotalSpending />
+        <TotalSpending :expenses="expenses" />
       </div>
 
       <div>
-        <MonthlySpending />
+        <MonthlySpending :expenses="expenses" />
       </div>
 
       <div>

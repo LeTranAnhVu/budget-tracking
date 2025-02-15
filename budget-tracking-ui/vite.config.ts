@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
@@ -6,6 +7,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  test: {
+    globals: true,
+  },
   plugins: [
     tailwindcss(),
     vue(),

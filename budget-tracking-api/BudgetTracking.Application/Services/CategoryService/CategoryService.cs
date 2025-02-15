@@ -1,4 +1,5 @@
 ﻿using BudgetTracking.Application.Services.ExpenseService;
+using BudgetTracking.Application.Services.SupCategoryService;
 using BudgetTracking.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,15 +14,6 @@ public class CategoryService(IUserContext userContext, IAppDbContext dbContext) 
             .Include(c => c.Expenses)
             .ToListAsync(ct);
 
-        return categories.Select(Map).ToList();
+        return categories.Select(cat => cat.ToCategoryDto()).ToList();
     }
-
-    public CategoryDto Map(Category category) => new CategoryDto()
-    {
-        Expenses = category.Expenses.Select(ex => ex.ToExpenseDto()).ToList(),
-        Name = category.Name,
-        SupCategoryName = category.SupCategory.Name,
-        MetaDescription = category.SupCategory.MetaDescription,
-        SupCategoryId = category.SupCategoryId,
-    };
 }

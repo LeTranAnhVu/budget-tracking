@@ -16,6 +16,9 @@ public class Expense : ModelBase, ITrackable
 
     public Category Category { get; set; } = null!;
 
+
+    public DateOnly PaidDate { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

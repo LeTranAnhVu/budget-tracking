@@ -1,8 +1,36 @@
 <script setup lang="ts">
+import type ExpenseDto from '@/models/ExpenseDto'
 import LineChartGradient from '@/components/charts/LineChart.vue'
+import { MONTHS } from '@/constants'
+import { getThreeLetterMonth } from '@/helpers/dateUtils'
 import toCurrency from '@/helpers/toCurrency'
+import { computed } from 'vue'
 
-const totalAmount = 12000
+const props = defineProps<{
+  expenses: ExpenseDto[]
+}>()
+
+const totalAmount = computed(() => {
+  return props.expenses.reduce((acc, ex) => acc + ex.amount, 0)
+})
+
+const accummulatedAmounts = computed<number[]>(() => {
+  const aggre = props.expenses.reduce((acc, ex) => {
+    const month = getThreeLetterMonth(ex.paidDate)
+    if (!acc[month]) {
+      acc[month] = 0
+    }
+
+    acc[month] += ex.amount
+    return acc
+  }, {} as Record<string, number>)
+
+  let acc = 0
+  return MONTHS.map((mo) => {
+    acc += aggre[mo] || 0
+    return acc
+  })
+})
 </script>
 
 <template>
@@ -17,8 +45,8 @@ const totalAmount = 12000
       <LineChartGradient
         color="red"
         label="Expense"
-        :y="[1, 12, 24, 43, 16, 43]"
-        :x="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']"
+        :y="[...accummulatedAmounts]"
+        :x="[...MONTHS]"
       />
     </div>
   </div>

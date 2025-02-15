@@ -1,5 +1,6 @@
 ﻿
 using BudgetTracking.Application.Services.CategoryService;
+using BudgetTracking.Application.Services.SupCategoryService;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BudgetTracking.API.Endpoints;

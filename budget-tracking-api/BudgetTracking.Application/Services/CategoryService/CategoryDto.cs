@@ -5,6 +5,7 @@ namespace BudgetTracking.Application.Services.CategoryService;
 
 public record CategoryDto
 {
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
 
     public string SupCategoryName { get; set; } = null!;

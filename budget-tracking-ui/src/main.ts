@@ -9,8 +9,8 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
-
 import App from './App.vue'
 import { router } from './routes'
 
@@ -27,8 +27,10 @@ ChartJS.register(
   Filler,
 )
 
+const pinia = createPinia()
 const app = createApp(App)
 
 app
+  .use(pinia)
   .use(router)
   .mount('#app')

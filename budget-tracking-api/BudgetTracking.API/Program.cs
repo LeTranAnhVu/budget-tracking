@@ -34,6 +34,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        var host = builder.Configuration.GetValue<string>("AllowedOrigins") ?? string.Empty;
+        policy.WithOrigins(host)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -57,6 +68,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/security?view=aspnetcore-9.0
 app.UseAuthentication();
@@ -77,5 +89,6 @@ api.MapGet("test", (IUserContext userContext) =>
 api.AddAuthEndpoints();
 api.AddExpenseEndpoints();
 api.AddCategoryEndpoints();
+api.AddSupCategoryEndpoints();
 
 app.Run();

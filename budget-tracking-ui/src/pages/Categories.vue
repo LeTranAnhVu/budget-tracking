@@ -1,62 +1,37 @@
 <script setup lang="ts">
+import type SupCategoryDto from '@/models/SupCategoryDto'
 import SlimItem from '@/components/SlimItem.vue'
 import { CURRENCY } from '@/constants'
 import toCurrency from '@/helpers/toCurrency'
-import { computed, ref } from 'vue'
+import { useAppStore } from '@/stores/appStore'
+import { computed, onMounted, ref } from 'vue'
 
-const ingredients = [
-  { id: 1, amount: 10.5, name: 'milk' },
-  { id: 2, amount: 123.12, name: 'diesel' },
-  { id: 3, amount: 11.5, name: 'sugar' },
-  { id: 4, amount: 34.5, name: 'toppings' },
-]
-
-const packaging = [
-  { id: 5, amount: 10.0, name: 'cups' },
-  { id: 6, amount: 21.32, name: 'cones' },
-  { id: 7, amount: 3.0, name: 'napkins' },
-  { id: 8, amount: 12.3, name: 'spoons' },
-]
-
-const fuel = [
-  { id: 9, amount: 35.45, name: 'gasoline' },
-  { id: 10, amount: 0.0, name: 'diesel' },
-]
-
-const maintaince = [
-  { id: 11, amount: 1045.5, name: 'repairs' },
-  { id: 12, amount: 8.6, name: 'servicing' },
-]
-
-const categories = {
-  ingredients,
-  packaging,
-  fuel,
-  maintaince,
-}
-
-const calcCategories = computed(() => {
-  const result = []
+const supCategories = ref<SupCategoryDto[]>([])
+const appStore = useAppStore()
+const allTransactions = computed(() => {
+  let result = []
   let totalAmount = 0
   let totalNoTrxs = 0
-  for (const [key, childrenCategories] of Object.entries(categories)) {
-    const catLen = childrenCategories.length
-    const amount = childrenCategories.reduce((acc, cat) => acc + cat.amount, 0)
+  for (const sup of supCategories.value) {
+    const expenses = sup.categories.flatMap(c => c.expenses)
+    const amount = expenses.reduce((acc, exp) => acc + exp.amount, 0)
 
-    totalNoTrxs += catLen
+    totalNoTrxs += expenses.length
     totalAmount += amount
 
     result.push({
-      title: key,
-      noOfTrxs: catLen,
+      name: sup.name,
+      noOfTrxs: expenses.length,
       amount,
-      transactions: childrenCategories,
+      transactions: sup.categories.map(cat => ({ name: cat.name, amount: cat.expenses.reduce((acc, ex) => acc + ex.amount, 0) })),
     })
   }
 
+  result = result.filter(r => r.amount !== 0)
+
   // Total
   result.push({
-    title: 'Total',
+    name: 'Total',
     noOfTrxs: totalNoTrxs,
     amount: totalAmount,
     transactions: [],
@@ -78,40 +53,50 @@ function handleClick(id: string): void {
     openedCategoryIndex.value = id
   }
 }
+
+async function loadData(): Promise<void> {
+  appStore.isLoading = true
+  supCategories.value = await appStore.getApi().get<SupCategoryDto[]>('/sup-categories/with-transactions')
+  appStore.isLoading = false
+}
+
+onMounted(async () => {
+  await loadData()
+})
 </script>
 
 <template>
   <div>
     <div class="flex flex-col gap-8">
-      <div>
+      <div v-if="allTransactions.length">
         <div class="flex justify-between">
           <div>
             <h2 class="text-xl font-bold flex items-center">
-              This week
+              All
             </h2>
-            <span class="font-normal text-xs text-[#636e88]">({{ toNoOfTrxText(calcCategories[calcCategories.length - 1]?.noOfTrxs) }})</span>
+            <span class="font-normal text-xs text-[#636e88]">({{ toNoOfTrxText(allTransactions[allTransactions.length - 1]?.noOfTrxs) }})</span>
           </div>
 
           <div>
             <p class="text-lg font-medium">
-              {{ `${CURRENCY} ${calcCategories[calcCategories.length - 1]?.amount.toFixed(2)}` }}
+              {{ `${CURRENCY} ${allTransactions[allTransactions.length - 1]?.amount.toFixed(2)}` }}
             </p>
           </div>
         </div>
         <div class="mt-2">
           <div
-            v-for="(item, index) in calcCategories.slice(0, -1)"
+            v-for="(item, index) in allTransactions.slice(0, -1)"
             :key="index"
           >
             <SlimItem
-              :title="item.title"
+              :title="item.name"
               :description="toNoOfTrxText(item.noOfTrxs)"
               :side-text="toCurrency(item.amount)"
-              @click="handleClick(`this_week_${item.title}`)"
+              @click="handleClick(`all_${item.name}`)"
             />
 
             <div
-              v-if="openedCategoryIndex === `this_week_${item.title}`"
+              v-if="openedCategoryIndex === `all_${item.name}`"
               class="pl-2 text-[#636e88] flex flex-col gap-3 mb-5"
             >
               <div
