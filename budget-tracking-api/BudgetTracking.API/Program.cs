@@ -58,6 +58,8 @@ builder.Services.Configure<JsonOptions>(opt =>
     opt.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,6 +72,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors();
 
+app.MapHealthChecks("/healthz");
+
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/security?view=aspnetcore-9.0
 app.UseAuthentication();
 app.UseAuthorization();
@@ -80,10 +84,9 @@ var api = app.MapGroup("api")
     .RequireAuthorization()
     .AddEndpointFilter<HttpUserContextBuilderFilter>();
 
-api.MapGet("test", (IUserContext userContext) =>
+api.MapGet("test", () =>
 {
-    var currentUser = userContext.CurrentUser;
-    return currentUser.Id;
+    return "Done!";
 });
 
 api.AddAuthEndpoints();
