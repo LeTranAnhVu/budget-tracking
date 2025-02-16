@@ -45,7 +45,7 @@ onMounted(async () => {
       </Transition>
     </Container>
     <div class="text-sm text-gray-500 text-center py-2">
-      v1.0.3
+      v1.0.4
     </div>
   </div>
 </template>
