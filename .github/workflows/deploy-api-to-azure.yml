@@ -8,7 +8,9 @@ on:
 env:
   AZURE_WEBAPP_NAME: brianle-budget-tracker-api    # Replace with your app name
   AZURE_WEBAPP_PACKAGE_PATH: './budget-tracking-api/BudgetTracking.API'  # Path to your API project
+  DB_PROJECT_PATH: './budget-tracking-api/BudgetTracking.Db'
   DOTNET_VERSION: '9.0.x'             # Your project uses .NET 9
+  CONNECTION_STRING: ${{ secrets.NEON_DB_CONNECTION_STRING }}
 
 jobs:
   build-and-deploy:
@@ -30,6 +32,12 @@ jobs:
     
     - name: Test
       run: dotnet test ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/BudgetTracking.API.csproj --no-restore --verbosity normal
+    
+    - name: Install EF Core CLI
+      run: dotnet tool install --global dotnet-ef
+      
+    - name: Apply Database Migrations
+      run: dotnet ef database update --project ${{env.DB_PROJECT_PATH}} --startup-project ${{env.AZURE_WEBAPP_PACKAGE_PATH}} --connection "${{ env.CONNECTION_STRING }}"
     
     - name: Publish
       run: dotnet publish ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/BudgetTracking.API.csproj -c Release -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}/publish
