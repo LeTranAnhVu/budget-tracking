@@ -32,6 +32,8 @@ jobs:
 
       # Build the project with pnpm
       - name: Build Vue UI
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: |
           cd ./budget-tracking-ui
           pnpm run build
