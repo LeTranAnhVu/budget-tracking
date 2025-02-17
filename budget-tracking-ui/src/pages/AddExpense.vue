@@ -5,7 +5,7 @@ import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import date2Str from '@/helpers/date2Str'
 import { useAppStore } from '@/stores/appStore'
 import { useToastStore } from '@/stores/toastStore'
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 
 const appStore = useAppStore()
 const toastStore = useToastStore()
