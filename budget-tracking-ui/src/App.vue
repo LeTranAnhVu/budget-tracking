@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Container from '@/components/Container.vue'
+import Toast from '@/components/Toast.vue'
 import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header/Header.vue'
@@ -30,6 +31,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Toast />
   <div>
     <LoadingSpinner :is-visible="appStore.throttledIsLoading" />
     <Header

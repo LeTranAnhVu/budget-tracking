@@ -6,9 +6,10 @@ import PlusIcon from '@/components/icons/PlusIcon.vue'
 import toCurrency from '@/helpers/toCurrency'
 import { routeNames } from '@/routes'
 import { useAppStore } from '@/stores/appStore'
+import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
+import { useToastStore } from '@/stores/toastStore'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
 
 const appStore = useAppStore()
 const { getApi } = useAppStore()
@@ -26,12 +27,14 @@ const expenses = ref<ExpenseDto[]>([])
 const router = useRouter()
 
 const availableCategoryIds = ref<number[]>([])
-const supCategoryOptions = ref<{id: number, name: string}[]>([]) 
+const supCategoryOptions = ref<{ id: number, name: string }[]>([])
+
+const toastStore = useToastStore()
 
 function getAvailableCategoryIds(): number[] {
   const raw = expenses.value.reduce((acc, ex) => {
-    if(!acc[ex.categoryId]){
-        acc[ex.categoryId] = 1
+    if (!acc[ex.categoryId]) {
+      acc[ex.categoryId] = 1
     }
     return acc
   }, {} as Record<number, number>)
@@ -39,14 +42,14 @@ function getAvailableCategoryIds(): number[] {
   return Object.keys(raw).map(Number)
 }
 
-function getSupCatetoryOptions (): {id: number, name: string}[] {
-  const result = useSupCategoriesStore().supCategories.filter(sup => {
+function getSupCatetoryOptions(): { id: number, name: string }[] {
+  const result = useSupCategoriesStore().supCategories.filter((sup) => {
     return sup.categories.find(cat => availableCategoryIds.value.includes(cat.id))
   }).map((s) => {
-    return {id: s.id, name: s.name}
+    return { id: s.id, name: s.name }
   })
 
-  result.unshift({id: -1, name: 'All'})
+  result.unshift({ id: -1, name: 'All' })
 
   return result
 }
@@ -59,9 +62,14 @@ function handleEdit(id: number): void {
 }
 
 async function handleDelete(id: number): Promise<void> {
-  await getApi().delete(`/expenses/${id}`)
-
-  await loadData()
+  try {
+    await getApi().delete(`/expenses/${id}`)
+    toastStore.showToast('Deleted!')
+    await loadData()
+  } catch (error) {
+    toastStore.showToast('Failed to delete expense', 'error')
+    throw error
+  }
 }
 
 function addExpense(): void {
@@ -82,11 +90,10 @@ function buildQueryParam(): string {
     params += `daysAgo=${selectedDaysAgo}`
   }
 
-  if(selectedCategory.value !== -1) {
+  if (selectedCategory.value !== -1) {
     const supCategoryId = supCategoryOptions.value.find(o => o.id === selectedCategory.value)?.id
-    if(supCategoryId) {
+    if (supCategoryId) {
       params += `supCategoryId=${supCategoryId}`
-
     }
   }
   return params ? `?${params}` : ''

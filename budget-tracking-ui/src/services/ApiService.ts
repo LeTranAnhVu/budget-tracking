@@ -33,7 +33,15 @@ export class ApiService {
       }
       throw response
     }
-    return await response.json()
+
+    // Check if there's content to parse
+    const contentType = response.headers.get('content-type')
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json()
+    }
+
+    // Return null for no-content responses
+    return null as T
   }
 
   async get<T>(endpoint: string): Promise<T> {

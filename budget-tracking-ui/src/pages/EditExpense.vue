@@ -4,11 +4,13 @@ import type { InputExpenseDto } from '@/models/InputExpenseDto'
 import Button from '@/components/Button.vue'
 import ExpenseForm from '@/components/forms/ExpenseForm.vue'
 import { useAppStore } from '@/stores/appStore'
+import { useToastStore } from '@/stores/toastStore'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const appStore = useAppStore()
+const toastStore = useToastStore()
 const expense = ref<ExpenseDto>()
 const form = reactive<InputExpenseDto>({
   amount: 0,
@@ -20,11 +22,18 @@ const form = reactive<InputExpenseDto>({
 
 async function save(): Promise<void> {
   if (form.categoryId === -1 || form.amount === 0) {
-    console.error('Nothing to create')
+    toastStore.showToast('Please fill in all required fields', 'error')
     return
   }
-  await appStore.getApi().put(`/expenses/${route.params.id}`, form)
-  await loadData()
+
+  try {
+    await appStore.getApi().put(`/expenses/${route.params.id}`, form)
+    toastStore.showToast('Updated!')
+    await loadData()
+  } catch (error) {
+    toastStore.showToast('Failed to update expense', 'error')
+    throw error
+  }
 }
 
 function createNewCategory(value: string, supCategoryId: number): void {
