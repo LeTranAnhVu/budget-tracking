@@ -24,6 +24,12 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      # Set Version
+      - name: Set Version
+        run: |
+          VERSION="v$(date +%Y).${{ github.run_number }}"
+          echo "VITE_APP_VERSION=$VERSION" >> ./budget-tracking-ui/.env
+
       # Install dependencies with pnpm
       - name: Install dependencies
         run: |

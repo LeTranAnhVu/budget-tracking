@@ -15,6 +15,8 @@ const router = useRouter()
 const appStore = useAppStore()
 const supCatStore = useSupCategoriesStore()
 const { logout } = useAuth()
+const version = import.meta.env.VITE_APP_VERSION
+
 async function initialLoad(): Promise<void> {
   const env = import.meta.env
   appStore.initializeApi(`${env.VITE_API_URL}/api`, () => {
@@ -47,7 +49,7 @@ onMounted(async () => {
       </Transition>
     </Container>
     <div class="text-sm text-gray-500 text-center py-2">
-      v1.0.4
+      {{ version }}
     </div>
   </div>
 </template>
