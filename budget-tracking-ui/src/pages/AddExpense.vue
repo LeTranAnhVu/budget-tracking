@@ -15,6 +15,7 @@ const form = reactive<InputExpenseDto>({
   note: '',
   categoryId: -1,
   includedTax: false,
+  vat: null,
 })
 
 function createNewCategory(value: string, supCategoryId: number): void {

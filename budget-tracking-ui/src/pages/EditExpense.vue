@@ -18,6 +18,7 @@ const form = reactive<InputExpenseDto>({
   note: '',
   categoryId: -1,
   includedTax: false,
+  vat: null,
 })
 
 async function save(): Promise<void> {
