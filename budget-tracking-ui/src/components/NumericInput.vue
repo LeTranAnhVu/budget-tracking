@@ -3,7 +3,7 @@ defineProps<{
   label: string
   symbol?: string
 }>()
-const value = defineModel<number>()
+const value = defineModel<number | null>()
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const value = defineModel<number>()
       <div class="flex w-full flex-1 items-stretch rounded-xl relative">
         <span
           v-if="symbol"
-          class="absolute left-4 top-[50%] translate-y-[-50%] text-[#636e88] "
+          class="absolute left-3 top-[50%] translate-y-[-50%] text-[#636e88] "
         >{{ symbol }}</span>
         <input
           v-model="value"

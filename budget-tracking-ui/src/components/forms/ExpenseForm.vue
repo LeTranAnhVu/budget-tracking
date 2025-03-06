@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import type CategoryDto from '@/models/CategoryDto'
+import type { InputExpenseDto } from '@/models/InputExpenseDto'
 import Badge from '@/components/Badge.vue'
 import Collapse from '@/components/Collapse.vue'
 import DateInput from '@/components/DateInput.vue'
 import DateIcon from '@/components/icons/DateIcon.vue'
 import MoneyIcon from '@/components/icons/MoneyIcon.vue'
+import TaxIcon from '@/components/icons/TaxIcon.vue'
 import NumericInput from '@/components/NumericInput.vue'
 import SingleSelector, { type SingleSelectorItem } from '@/components/SingleSelector/SingleSelector.vue'
 import SingleSelectorCreateForm from '@/components/SingleSelector/SingleSelectorCreateForm.vue'
-
+import Switch from '@/components/Switch.vue'
 import TextArea from '@/components/TextArea.vue'
 import { CURRENCY } from '@/constants'
 import { useSupCategoriesStore } from '@/stores/supCategoriesStore'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 const emit = defineEmits<{
   newCategorySave: [value: string, supCategoryId: number]
@@ -20,12 +22,7 @@ const emit = defineEmits<{
 
 const supCategoryStore = useSupCategoriesStore()
 
-const form = defineModel<{
-  amount: number
-  paidDate: string
-  note: string
-  categoryId: number
-}>('expenseForm', { required: true })
+const form = defineModel<InputExpenseDto>('expenseForm', { required: true })
 
 const supCategories = computed(() => supCategoryStore.supCategories)
 
@@ -46,6 +43,10 @@ const selectedCategory = computed<CategoryDto | null>(() => {
   return categories.find(category => form.value.categoryId === category.id) || null
 })
 
+watch(() => form.value.includedTax, () => {
+  form.value.vat = form.value.includedTax ? 0 : null
+})
+
 function saveNewCategory(value: string, supCategoryId: number): void {
   emit('newCategorySave', value, supCategoryId)
 }
@@ -60,6 +61,24 @@ function saveNewCategory(value: string, supCategoryId: number): void {
     >
       <template #icon>
         <MoneyIcon />
+      </template>
+    </NumericInput>
+
+    <Switch
+      v-model="form.includedTax"
+      class="mt-4"
+      label="Include tax"
+    />
+
+    <NumericInput
+      v-if="form.includedTax"
+      v-model="form.vat"
+      class="mt-2"
+      symbol="%"
+      label="Tax (%)"
+    >
+      <template #icon>
+        <TaxIcon />
       </template>
     </NumericInput>
 

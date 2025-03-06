@@ -4,4 +4,5 @@ export interface InputExpenseDto {
   paidDate: string
   includedTax: boolean
   note: string
+  vat: number | null
 }
